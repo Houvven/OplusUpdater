@@ -10,7 +10,6 @@ jobs:
   build:
     strategy:
       matrix:
-        dir: [ ${{matrix.goos}}-${{matrix.goarch}}/oplus-updater ]
         include:
           - goos: android
             goarch: arm
@@ -55,6 +54,11 @@ jobs:
         name: Set CC for ARM64
         run: echo "CC=aarch64-linux-android-gcc" >> $GITHUB_ENV
 
+      - name: Set buils output dir
+        run: echo "::set-env name=dir::oplus-updater-${{ matrix.goos }}-${{ matrix.goarch }}"
+        env:
+          dir: oplus-updater-${{ matrix.goos }}-${{ matrix.goarch }}
+          
       - name: Build
         run: go build -v -o ${{ dir }} -ldflags "-s -w" .
         env:
