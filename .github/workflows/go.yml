@@ -10,8 +10,13 @@ jobs:
   build:
     strategy:
       matrix:
-        goos: [ linux, darwin ]
-        goarch: [ amd64 ]
+        goos: [ linux, darwin, android, windows ]
+        goarch: [ amd64, arm64, arm, 386 ]
+        exclude: [
+          { goos: android, goarch: 386 },
+          { goos: windows, goarch: arm },
+          { goos: windows, goarch: arm64 },
+        ]
 
     runs-on: ubuntu-latest
     steps:
