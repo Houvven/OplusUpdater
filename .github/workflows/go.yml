@@ -2,17 +2,31 @@ name: Go
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "workflows" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "workflows" ]
 
 jobs:
   build:
     strategy:
       matrix:
-        goos: [ linux, windows, darwin ]
-        goarch: [ amd64, 386 ]
-        name: ${{ matrix.goos }}-${{ matrix.goarch }}
+        include:
+          - goos: android
+            goarch: arm
+          - goos: android
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+          - goos: windows
+            goarch: 386
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: 386
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
 
     runs-on: ubuntu-latest
     steps:
@@ -20,16 +34,46 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.20'
+          go-version: '1.22'
       - name: Download dependencies
         run: go mod download
-      - name: Cross compilation
-        run: go build -v -o ./bin/${{ matrix.name }}/oplus-updater ./main.go
+
+      - if: matrix.goos == 'android'
+        name: Set CGO_ENABLED for Android
+        run: echo "CGO_ENABLED=1" >> $GITHUB_ENV
+      - if: matrix.goos == 'android'
+        name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r26d
+          local-cache: true
+
+      - if: matrix.goarch == 'arm'
+        name: Set CC for ARM
+        run: |
+          ls $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin
+          echo "CC=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang" >> $GITHUB_ENV
+      - if: matrix.goarch == 'arm64'
+        name: Set CC for ARM64
+        run: |
+          ls $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin
+          echo "CC=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
+
+      - name: Build
+        run: go build -v -o ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater -ldflags "-s -w" .
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
+
+      - if: matrix.goos != 'darwin'
+        name: UPX GitHub Action
+        uses: crazy-max/ghaction-upx@v3.0.0
+        with:
+          files: ./bin/*/oplus-updater
+          args: --ultra-brute
+
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: oplus-updater-${{ matrix.name }}
-          path: bin/${{ matrix.name }}/oplus-updater
+          name: oplus-updater-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater
