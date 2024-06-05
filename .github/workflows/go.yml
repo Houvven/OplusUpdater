@@ -10,8 +10,6 @@ jobs:
   build:
     strategy:
       matrix:
-        goos: [ android, windows, linux, darwin ]
-        goarch: [ amd64, 386, arm, arm64 ]
         include:
           - goos: android
             goarch: arm
@@ -29,7 +27,7 @@ jobs:
             goarch: amd64
           - goos: darwin
             goarch: arm64
-        
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
