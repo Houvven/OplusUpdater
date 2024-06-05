@@ -23,7 +23,7 @@ jobs:
       - name: Download dependencies
         run: go mod download
       - name: Build
-        run: go build -v -o ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater ./main.go
+        run: go build -v -o oplus-updater .
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
@@ -31,5 +31,5 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: oplus-updater-${{ matrix.name }}
-          path: bin/${{ matrix.name }}/oplus-updater
+          name: oplus-updater-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: oplus-updater
