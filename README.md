@@ -1,6 +1,6 @@
 # Oplus Updater
 
-Use OPlus office api to query OPlus,OPPO and Realme Mobile 's OS version update.
+Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version update.
 
 ## Update request headers
 
