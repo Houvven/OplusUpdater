@@ -65,10 +65,11 @@ jobs:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
 
-      - name: UPX GitHub Action
+      - if: matrix.goos != 'darwin'
+        name: UPX GitHub Action
         uses: crazy-max/ghaction-upx@v3.0.0
         with:
-          file: ./bin/*/oplus-updater
+          files: ./bin/*/oplus-updater
           args: --ultra-brute
 
       - name: Archive artifacts
