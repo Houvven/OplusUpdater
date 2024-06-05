@@ -27,7 +27,6 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
-          CGO_ENABLED: 0
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
