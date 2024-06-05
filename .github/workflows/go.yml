@@ -12,15 +12,24 @@ jobs:
       matrix:
         goos: [ android, windows, linux, darwin ]
         goarch: [ amd64, 386, arm, arm64 ]
-        goos-windows: [ windows ]
-        goarch-windows: [ amd64, 386 ]
-        goos-linux: [ linux ]
-        goarch-linux: [ amd64, 386 ]
-        goos-darwin: [ darwin ]
-        goarch-darwin: [ amd64, arm64 ]
-        goos-android: [ android ]
-        goarch-android: [ arm, arm64 ]
-    
+        include:
+          - goos: android
+            goarch: arm
+          - goos: android
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+          - goos: windows
+            goarch: 386
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: 386
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+        
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
