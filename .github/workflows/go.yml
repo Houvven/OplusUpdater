@@ -49,10 +49,14 @@ jobs:
 
       - if: matrix.goarch == 'arm'
         name: Set CC for ARM
-        run: echo "CC=armv7a-linux-android-gcc" >> $GITHUB_ENV
+        run: |
+          echo $ANDROID_NDK_HOME
+          echo "CC=armv7a-linux-android-gcc" >> $GITHUB_ENV
       - if: matrix.goarch == 'arm64'
         name: Set CC for ARM64
-        run: echo "CC=aarch64-linux-android-gcc" >> $GITHUB_ENV
+        run: |
+          echo $ANDROID_NDK_HOME
+          echo "CC=aarch64-linux-android-gcc" >> $GITHUB_ENV
 
       - name: Build
         run: go build -v -o ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater -ldflags "-s -w" .
