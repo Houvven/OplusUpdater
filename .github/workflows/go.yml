@@ -10,20 +10,17 @@ jobs:
   build:
     strategy:
       matrix:
-        goos: [ linux, darwin, android, windows ]
-        goarch: [ amd64, arm64, arm, 386 ]
-        exclude:
-          - goarch: arm
-            goos: windows
-          - goarch: arm
-            goos: darwin
-          - goarch: amd64
-            goos: android
-          - goarch: 386
-            goos: android
-          - goarch: arm64
-            goos: android
-
+        goos: [ android, windows, linux, darwin ]
+        goarch: [ amd64, 386, arm, arm64 ]
+        goos-windows: [ windows ]
+        goarch-windows: [ amd64, 386 ]
+        goos-linux: [ linux ]
+        goarch-linux: [ amd64, 386 ]
+        goos-darwin: [ darwin ]
+        goarch-darwin: [ amd64, arm64 ]
+        goos-android: [ android ]
+        goarch-android: [ arm, arm64 ]
+    
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,6 +30,15 @@ jobs:
           go-version: '1.22'
       - name: Download dependencies
         run: go mod download
+      - name: Set CC for ARM
+        if: matrix.goarch == 'arm'
+        run: echo "CC=armv7a-linux-android-gcc" >> $GITHUB_ENV
+      - name: Set CC for ARM64
+        if: matrix.goarch == 'arm64'
+        run: echo "CC=aarch64-linux-android-gcc" >> $GITHUB_ENV
+      - name: Set CGO_ENABLED for Android
+        if: matrix.goos == 'android'
+        run: echo "CGO_ENABLED=1" >> $GITHUB_ENV
       - name: Build
         run: go build -v -o oplus-updater .
         env:
