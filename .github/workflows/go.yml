@@ -65,12 +65,6 @@ jobs:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
 
-      - name: Upx compress
-        if: matrix.goos != 'android'
-        run: upx ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater
-        env:
-          UPX: ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater
-
       - name: UPX GitHub Action
         uses: crazy-max/ghaction-upx@v3.0.0
         with:
