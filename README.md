@@ -173,3 +173,121 @@ type: `CryptoConfig`
     return "enforcing".equals(verityMode) || ("eio".equals(verityMode) && "locked".equals(deviceState));
 ```
 
+## Response
+
+### Response Cipher
+```json
+{
+  "parent": "ota",
+  "components": [
+    {
+      "componentId": "my_manifest_RMX3820_11.A.48_0480_202312191750.97.8acdd0e1",
+      "componentName": "my_manifest",
+      "componentVersion": "RMX3820_11.A.48_0480_202312191750.97.8acdd0e1",
+      "componentPackets": {
+        "size": "7567870840",
+        "vabInfo": {
+          "data": {
+            "otaStreamingProperty": "payload_metadata.bin:2061:289585,payload.bin:2061:7567865232,payload_properties.txt:7567867351:357,metadata:69:1004,metadata.pb:1141:853",
+            "vab_package_hash": "9dee63eec5dfbe0dc0912d1f9f4a49ac",
+            "extra_params": "metadata_hash:4c53b6277db3711a797c5f6c4ef24ee16b85783c81344e4532eb18a11d1e8a22",
+            "header": [
+              "FILE_HASH=aE0Ij/TOUrVd/zrsHd2Rirj+Cm7XAXqmUIdGXotS6LI=",
+              "FILE_SIZE=7567865232",
+              "METADATA_HASH=A/nUVqGS82xpbbtNa9ERoignix3BTN3NZFQ27CtFvcs=",
+              "METADATA_SIZE=289318",
+              "security_patch_vendor=2023-10-05",
+              "oplus_rom_version=V13.1.1",
+              "ota_target_version=RMX3820_11.A.48_0480_202312191750",
+              "oplus_separate_soft=22635",
+              "oplus_update_engine_verify_disable=0",
+              "security_patch=2023-10-05"
+            ]
+          }
+        },
+        "manualUrl": "https://gauss-componentotacostmanual-cn.allawnfs.com/remove-0e724850647faba7b84e96cc150c7f9c/component-ota/23/12/20/703c9a72c6684369ae2cbeea7dacf305.zip",
+        "id": "domestic_my_manifest_RMX3820_11.A.48_0480_202312191750.97.8acdd0e1_1_9dee63eec5dfbe0dc0912d1f9f4a49ac",
+        "type": "1",
+        "url": "https://gauss-compotacostauto-cn.allawnfs.com/remove-0e724850647faba7b84e96cc150c7f9c/component-ota/23/12/20/703c9a72c6684369ae2cbeea7dacf305.zip",
+        "md5": "9dee63eec5dfbe0dc0912d1f9f4a49ac"
+      }
+    }
+  ],
+  "securityPatch": "2023-10-05",
+  "realVersionName": "RMX3820_13.1.1.148(CN01)",
+  "otaVersion": "RMX3820_11.A.48_0480_202312191750",
+  "isNvDescription": true,
+  "description": {
+    "opex": {},
+    "share": ".",
+    "panelUrl": "https://gauss-compotacostauto-cn.allawnfs.com/remove-0e724850647faba7b84e96cc150c7f9c/component-ota/24/01/05/eb67803529e24f49a4ea4b4ce5e0e7f2.html",
+    "url": "https://h5fs.coloros.com/c1eeea21f88343e48612a8c5851cee23/static/index.html#/about",
+    "firstTitle": "本次更新优化系统流畅性、优化续航表现、修复其他已知问题"
+  },
+  "versionName": "RMX3820_13.1.1.148(CN01)",
+  "rid": "b542a90e-8213-4203-8f4f-63ea9a49d6f6",
+  "reminderValue": {
+    "download": {
+      "notice": [
+        1,
+        3,
+        5,
+        7,
+        7,
+        7
+      ],
+      "pop": [
+        1,
+        1,
+        1
+      ],
+      "version": "1703555533000"
+    },
+    "upgrade": {
+      "notice": [
+        3,
+        5,
+        7,
+        7,
+        7
+      ],
+      "pop": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "version": "1703555533000"
+    }
+  },
+  "isRecruit": false,
+  "realAndroidVersion": "Android 13",
+  "opexInfo": [],
+  "isSecret": false,
+  "realOsVersion": "ColorOS 13.1.1",
+  "osVersion": "ColorOS 13.1",
+  "componentAssembleType": true,
+  "googlePatchInfo": "0",
+  "id": "65977eee124eec011ace498a",
+  "colorOSVersion": "ColorOS 13.1",
+  "paramFlag": 1,
+  "reminderType": 1,
+  "noticeType": 0,
+  "decentralize": {
+    "strategyVersion": "9",
+    "round": 28800,
+    "offset": 24286
+  },
+  "versionCode": 480,
+  "silenceUpdate": 0,
+  "securityPatchVendor": "2023-10-05",
+  "realOtaVersion": "RMX3820_11.A.48_0480_202312191750",
+  "androidVersion": "Android 13",
+  "nightUpdateLimit": "00-99",
+  "versionTypeH5": "正式版",
+  "aid": "RMX3820NV97_11.A",
+  "nvId16": "NV97",
+  "status": "published"
+}
+```
