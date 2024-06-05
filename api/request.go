@@ -121,5 +121,5 @@ func UpdateResponseParse(body ResponseResult, key []byte) {
 	if err != nil {
 		log.Fatalf("Error formatting cipher: %v", err)
 	}
-	log.Printf("Update response: %s", cipherJson)
+	log.Println(string(cipherJson))
 }
