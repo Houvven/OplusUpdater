@@ -54,13 +54,8 @@ jobs:
         name: Set CC for ARM64
         run: echo "CC=aarch64-linux-android-gcc" >> $GITHUB_ENV
 
-      - name: Set buils output dir
-        run: echo "::set-env name=dir::oplus-updater-${{ matrix.goos }}-${{ matrix.goarch }}"
-        env:
-          dir: oplus-updater-${{ matrix.goos }}-${{ matrix.goarch }}
-          
       - name: Build
-        run: go build -v -o ${{ dir }} -ldflags "-s -w" .
+        run: go build -v -o ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater -ldflags "-s -w" .
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
@@ -68,4 +63,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: oplus-updater-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: ${{ dir }}
+          path: ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater
