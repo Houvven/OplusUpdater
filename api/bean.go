@@ -74,3 +74,35 @@ func DefaultUpdateRequestCipher() (RequestCipher, error) {
 	err := json.Unmarshal([]byte(DefaultRequestBodyJsonStr), &params)
 	return params, err
 }
+
+type UpdateResponseCipher struct {
+	Components []struct {
+		ComponentId      string `json:"componentId"`
+		ComponentName    string `json:"componentName"`
+		ComponentVersion string `json:"componentVersion"`
+
+		ComponentPackets struct {
+			Size      string `json:"size"`
+			ManualUrl string `json:"manualUrl"`
+			Id        string `json:"id"`
+			Url       string `json:"url"`
+			Md5       string `json:"md5"`
+		} `json:"componentPackets"`
+	} `json:"components"`
+
+	SecurityPatch   string `json:"securityPatch"`
+	RealVersionName string `json:"realVersionName"`
+
+	Description struct {
+		PanelUrl   string `json:"panelUrl"`
+		Url        string `json:"url"`
+		FirstTitle string `json:"firstTitle"`
+	} `json:"description"`
+
+	RealAndroidVersion  string `json:"realAndroidVersion"`
+	RealOsVersion       string `json:"realOsVersion"`
+	SecurityPatchVendor string `json:"securityPatchVendor"`
+	RealOtaVersion      string `json:"realOtaVersion"`
+	VersionTypeH5       string `json:"versionTypeH5"`
+	Status              string `json:"status"`
+}

@@ -106,11 +106,20 @@ func UpdateResponseParse(body ResponseResult, key []byte) {
 	if err != nil {
 		log.Fatalf("Error decoding IV: %v", err)
 	}
-	cipher := crypto.FromBase64String(m["cipher"].(string)).
+	cipherBytes := crypto.FromBase64String(m["cipher"].(string)).
 		Aes().CTR().NoPadding().
 		WithKey(key).
 		WithIv(iv).
-		Decrypt().
-		ToString()
-	println("cipher", cipher)
+		Decrypt().ToBytes()
+
+	var cipher UpdateResponseCipher
+	if err := json.Unmarshal(cipherBytes, &cipher); err != nil {
+		log.Fatalf("Error unmarshalling cipher: %v", err)
+	}
+
+	cipherJson, err := json.MarshalIndent(cipher, "", "  ")
+	if err != nil {
+		log.Fatalf("Error formatting cipher: %v", err)
+	}
+	log.Printf("Update response: %s", cipherJson)
 }
