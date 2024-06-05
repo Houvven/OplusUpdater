@@ -46,6 +46,7 @@ jobs:
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r26d
+          local-cache: true
 
       - if: matrix.goarch == 'arm'
         name: Set CC for ARM
@@ -73,7 +74,7 @@ jobs:
       - name: UPX GitHub Action
         uses: crazy-max/ghaction-upx@v3.0.0
         with:
-          files: ./bin/*/oplus-updater
+          file: ./bin/*/oplus-updater
           args: --ultra-brute
 
       - name: Archive artifacts
