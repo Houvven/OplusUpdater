@@ -10,6 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
+        dir: [ ${{matrix.goos}}-${{matrix.goarch}}/oplus-updater ]
         include:
           - goos: android
             goarch: arm
@@ -37,17 +38,25 @@ jobs:
           go-version: '1.22'
       - name: Download dependencies
         run: go mod download
-      - name: Set CC for ARM
-        if: matrix.goarch == 'arm'
-        run: echo "CC=armv7a-linux-android-gcc" >> $GITHUB_ENV
-      - name: Set CC for ARM64
-        if: matrix.goarch == 'arm64'
-        run: echo "CC=aarch64-linux-android-gcc" >> $GITHUB_ENV
-      - name: Set CGO_ENABLED for Android
-        if: matrix.goos == 'android'
+
+      - if: matrix.goos == 'android'
+        name: Set CGO_ENABLED for Android
         run: echo "CGO_ENABLED=1" >> $GITHUB_ENV
+      - if: matrix.goos == 'android'
+        name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r26d
+
+      - if: matrix.goarch == 'arm'
+        name: Set CC for ARM
+        run: echo "CC=armv7a-linux-android-gcc" >> $GITHUB_ENV
+      - if: matrix.goarch == 'arm64'
+        name: Set CC for ARM64
+        run: echo "CC=aarch64-linux-android-gcc" >> $GITHUB_ENV
+
       - name: Build
-        run: go build -v -o oplus-updater .
+        run: go build -v -o ${{ dir }} -ldflags "-s -w" .
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
@@ -55,4 +64,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: oplus-updater-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: oplus-updater
+          path: ${{ dir }}
