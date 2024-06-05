@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "workflows" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "workflows" ]
 
 jobs:
   build:
@@ -12,7 +12,6 @@ jobs:
       matrix:
         goos: [ linux, windows, darwin ]
         goarch: [ amd64, 386 ]
-        name: ${{ matrix.goos }}-${{ matrix.goarch }}
 
     runs-on: ubuntu-latest
     steps:
@@ -24,7 +23,7 @@ jobs:
       - name: Download dependencies
         run: go mod download
       - name: Cross compilation
-        run: go build -v -o ./bin/${{ matrix.name }}/oplus-updater ./main.go
+        run: go build -v -o ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater ./main.go
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
