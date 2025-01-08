@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"strings"
 )
 
@@ -69,9 +70,10 @@ type RequestCipher struct {
 	H5LinkVersion int    `json:"h5LinkVersion"`
 }
 
-func DefaultUpdateRequestCipher() (RequestCipher, error) {
+func DefaultUpdateRequestCipher(mode string) (RequestCipher, error) {
+	defaultRequestBodyJsonStr := fmt.Sprintf(`{ "mode": %s, "isRooted": "0" }`, mode)
 	var params RequestCipher
-	err := json.Unmarshal([]byte(DefaultRequestBodyJsonStr), &params)
+	err := json.Unmarshal([]byte(defaultRequestBodyJsonStr), &params)
 	return params, err
 }
 

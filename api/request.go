@@ -4,24 +4,27 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"github.com/deatil/go-cryptobin/cryptobin/crypto"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"strings"
+	"updater/config"
+
+	"github.com/deatil/go-cryptobin/cryptobin/crypto"
 )
 
-func (header *UpdateRequestHeaders) makeHeader() (http.Header, error) {
+func (header *UpdateRequestHeaders) makeHeader(c config.Config) (http.Header, error) {
 	h := http.Header{
 		"androidVersion": {header.AndroidVersion},
+		"osVersion":      {header.ColorOSVersion},
 		"colorOSVersion": {header.ColorOSVersion},
-		"otaVersion":     {header.OtaVersion},
+		"otaVersion":     {header.OtaVersion}, // ro.build.version.ota - my_manifest/build.prop
 		"deviceId":       {header.DeviceId},
 		"model":          {strings.Split(header.OtaVersion, "_")[0]},
-		"language":       {"zh-CN"},
-		"nvCarrier":      {"10010111"},
-		"version":        {"2"},
+		"language":       {c.Language},
+		"nvCarrier":      {c.CarrierID},
+		"version":        {c.Version},
 		"Content-Type":   {"application/json; charset=utf-8"},
 	}
 
@@ -34,7 +37,7 @@ func (header *UpdateRequestHeaders) makeHeader() (http.Header, error) {
 }
 
 func makeBody(key, iv []byte, cipher RequestCipher) ([]byte, error) {
-	marshal, err := json.Marshal(cipher)
+	marshal, _ := json.Marshal(cipher)
 	paramsJson, err := json.Marshal(
 		map[string]string{
 			"cipher": crypto.FromBytes(marshal).
@@ -57,19 +60,20 @@ func RequestUpdate(
 	key, iv []byte,
 	updateHeaders UpdateRequestHeaders,
 	cipher RequestCipher,
+	c config.Config,
 ) (ResponseResult, error) {
 	body, err := makeBody(key, iv, cipher)
 	if err != nil {
 		return ResponseResult{}, err
 	}
-	header, err := updateHeaders.makeHeader()
+	header, err := updateHeaders.makeHeader(c)
 	if err != nil {
 		return ResponseResult{}, err
 	}
 
 	req := &http.Request{
 		Method: http.MethodPost,
-		URL:    &url.URL{Scheme: "https", Host: Host, Path: "/update/v3"},
+		URL:    &url.URL{Scheme: "https", Host: c.Host, Path: "/update/v3"},
 		Header: header,
 		Body:   io.NopCloser(bytes.NewBuffer(body)),
 	}
