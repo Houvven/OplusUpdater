@@ -34,11 +34,11 @@ func GetConfig(country string) Config {
 
 	if country == "US" {
 		return Config{
-			CarrierID:        "00011011",
-			Host:             "TBD",
+			CarrierID:        "10100001",
+			Host:             "UNKNOWN",
 			Language:         "en-US",
-			PublicKey:        "TBD",
-			PublicKeyVersion: "TBD",
+			PublicKey:        "UNKNOWN",
+			PublicKeyVersion: "UNKNOWN",
 			Version:          "2",
 		}
 	}
