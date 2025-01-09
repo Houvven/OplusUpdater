@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"regexp"
 	"strings"
 	"updater/api"
 	"updater/config"
@@ -27,13 +26,13 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the value of the flag
 		otaVer, err := cmd.Flags().GetString("ota-version")
-		pattern := `^[A-Z]{4}\d{4}_\d{2}\.[A-Z]$`
-		re := regexp.MustCompile(pattern)
-		if re.MatchString(otaVer) {
+		handlerError(err)
+
+		// maybe only support at realme.
+		// i dont known oppo and oplus 's version format.
+		if len(strings.Split(otaVer, "_")) < 3 || len(strings.Split(otaVer, ".")) < 3 {
 			otaVer += ".00_0000_000000000000"
 		}
-
-		handlerError(err)
 		androidVer, err := cmd.Flags().GetString("android-version")
 		handlerError(err)
 		colorOSVer, err := cmd.Flags().GetString("colorOS-version")
