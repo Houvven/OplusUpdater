@@ -2,13 +2,15 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
 	"updater/api"
+	"updater/config"
 	"updater/util"
+
+	"github.com/spf13/cobra"
 )
 
 func handlerError(err error) {
@@ -29,8 +31,12 @@ var rootCmd = &cobra.Command{
 		handlerError(err)
 		colorOSVer, err := cmd.Flags().GetString("colorOS-version")
 		handlerError(err)
+		zone, err := cmd.Flags().GetString("zone")
+		handlerError(err)
+		mode, err := cmd.Flags().GetString("mode")
+		handlerError(err)
 
-		do(otaVer, androidVer, colorOSVer)
+		do(zone, mode, otaVer, androidVer, colorOSVer)
 	},
 }
 
@@ -46,6 +52,8 @@ func init() {
 	rootCmd.Flags().StringP("ota-version", "o", strings.TrimSpace(string(otaVerBytes)), "OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000")
 	rootCmd.Flags().StringP("android-version", "a", "nil", "Android version (optional), e.g., --android-version=Android14")
 	rootCmd.Flags().StringP("colorOS-version", "c", "nil", "ColorOS version (optional), e.g., --colorOS-version=ColorOS14.1.0")
+	rootCmd.Flags().StringP("zone", "z", "CN", "Server zone: CN (default), EU or IN (optional), e.g., --zone=CN")
+	rootCmd.Flags().StringP("mode", "m", "0", "Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0")
 
 	if err != nil {
 		if err := rootCmd.MarkFlagRequired("ota-version"); err != nil {
@@ -54,12 +62,14 @@ func init() {
 	}
 }
 
-func do(otaVer, androidVer, colorOSVer string) {
+func do(zone, mode, otaVer, androidVer, colorOSVer string) {
 	var handlerErr = func(err error) {
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
+
+	c := config.GetConfig(zone)
 
 	key, err := util.RandomKey()
 	handlerErr(err)
@@ -67,7 +77,7 @@ func do(otaVer, androidVer, colorOSVer string) {
 	iv, err := util.RandomIv()
 	handlerErr(err)
 
-	protectedKey, err := util.GenerateProtectedKey(key, []byte(api.PublicKey))
+	protectedKey, err := util.GenerateProtectedKey(key, []byte(c.PublicKey))
 	handlerErr(err)
 
 	updateHeaders := api.UpdateRequestHeaders{
@@ -78,7 +88,7 @@ func do(otaVer, androidVer, colorOSVer string) {
 			"SCENE_1": {
 				ProtectedKey:       protectedKey,
 				Version:            util.GenerateProtectedVersion(),
-				NegotiationVersion: "1615879139745",
+				NegotiationVersion: c.PublicKeyVersion,
 			},
 		},
 	}
@@ -86,11 +96,11 @@ func do(otaVer, androidVer, colorOSVer string) {
 	deviceId := util.GetDefaultDeviceId()
 	updateHeaders.SetDeviceId(deviceId)
 
-	cipher, err := api.DefaultUpdateRequestCipher()
+	cipher, err := api.DefaultUpdateRequestCipher(mode)
 	handlerErr(err)
 	cipher.DeviceId = deviceId
 
-	result, err := api.RequestUpdate(key, iv, updateHeaders, cipher)
+	result, err := api.RequestUpdate(key, iv, updateHeaders, cipher, c)
 	handlerErr(err)
 
 	api.UpdateResponseParse(result, key)
