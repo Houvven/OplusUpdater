@@ -4,7 +4,8 @@ Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version updat
 
 ## How to use?
 ```shell
-oplus-updater --help                     Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version update.
+$ oplus-updater -h                                              
+Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version update.
 
 Usage:
   oplus-updater [flags]
@@ -13,7 +14,9 @@ Flags:
   -a, --android-version string   Android version (optional), e.g., --android-version=Android14 (default "nil")
   -c, --colorOS-version string   ColorOS version (optional), e.g., --colorOS-version=ColorOS14.1.0 (default "nil")
   -h, --help                     help for oplus-updater
-  -o, --ota-version string       OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000 (default "RMX3350_11.F.25_3250_202403011232")
+  -m, --mode string              Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0 (default "0")
+  -o, --ota-version string       OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000
+  -z, --zone string              Server zone: CN (default), EU or IN (optional), e.g., --zone=CN (default "CN")
 ```
 
 ## Update request headers
