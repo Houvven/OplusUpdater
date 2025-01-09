@@ -15,7 +15,7 @@ Flags:
   -c, --colorOS-version string   ColorOS version (optional), e.g., --colorOS-version=ColorOS14.1.0 (default "nil")
   -h, --help                     help for oplus-updater
   -m, --mode string              Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0 (default "0")
-  -o, --ota-version string       OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000
+  -o, --ota-version string       OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000 or --ota-version=RMX3820_11.A
   -z, --zone string              Server zone: CN (default), EU or IN (optional), e.g., --zone=CN (default "CN")
 ```
 
