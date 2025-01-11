@@ -41,8 +41,10 @@ var rootCmd = &cobra.Command{
 		handlerError(err)
 		mode, err := cmd.Flags().GetString("mode")
 		handlerError(err)
+		proxyStr, err := cmd.Flags().GetString("proxy")
+		handlerError(err)
 
-		do(zone, mode, otaVer, androidVer, colorOSVer)
+		do(zone, mode, otaVer, androidVer, colorOSVer, proxyStr)
 	},
 }
 
@@ -60,6 +62,7 @@ func init() {
 	rootCmd.Flags().StringP("colorOS-version", "c", "nil", "ColorOS version (optional), e.g., --colorOS-version=ColorOS14.1.0")
 	rootCmd.Flags().StringP("zone", "z", "CN", "Server zone: CN (default), EU or IN (optional), e.g., --zone=CN")
 	rootCmd.Flags().StringP("mode", "m", "0", "Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0")
+	rootCmd.Flags().StringP("proxy", "p", "", "Proxy server, e.g., --proxy=type://@host:port or --proxy=type://user:password@host:port")
 
 	if err != nil {
 		if err := rootCmd.MarkFlagRequired("ota-version"); err != nil {
@@ -68,7 +71,7 @@ func init() {
 	}
 }
 
-func do(zone, mode, otaVer, androidVer, colorOSVer string) {
+func do(zone, mode, otaVer, androidVer, colorOSVer, proxyStr string) {
 	var handlerErr = func(err error) {
 		if err != nil {
 			log.Fatal(err)
@@ -106,7 +109,7 @@ func do(zone, mode, otaVer, androidVer, colorOSVer string) {
 	handlerErr(err)
 	cipher.DeviceId = deviceId
 
-	result, err := api.RequestUpdate(key, iv, updateHeaders, cipher, c)
+	result, err := api.RequestUpdate(key, iv, updateHeaders, cipher, c, proxyStr)
 	handlerErr(err)
 
 	api.UpdateResponseParse(result, key)
