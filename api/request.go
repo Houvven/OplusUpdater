@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"golang.org/x/net/proxy"
 	"io"
 	"log"
 	"net/http"
@@ -61,6 +62,7 @@ func RequestUpdate(
 	updateHeaders UpdateRequestHeaders,
 	cipher RequestCipher,
 	c config.Config,
+	proxyStr string,
 ) (ResponseResult, error) {
 	body, err := makeBody(key, iv, cipher)
 	if err != nil {
@@ -78,7 +80,9 @@ func RequestUpdate(
 		Body:   io.NopCloser(bytes.NewBuffer(body)),
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	client := &http.Client{}
+	parseProxy(client, proxyStr)
+	resp, err := client.Do(req)
 	if err != nil {
 		return ResponseResult{}, err
 	}
@@ -126,4 +130,45 @@ func UpdateResponseParse(body ResponseResult, key []byte) {
 		log.Fatalf("Error formatting cipher: %v", err)
 	}
 	log.Println(string(cipherJson))
+}
+
+func parseProxy(client *http.Client, p string) {
+	if p == "" {
+		return
+	}
+
+	parsedURL, err := url.Parse(p)
+	if err != nil || parsedURL.Scheme == "" || parsedURL.Host == "" {
+		log.Fatalf("Invalid proxy URL: %s", p)
+	}
+
+	switch parsedURL.Scheme {
+	case "socks":
+		var proxyAuth *proxy.Auth
+		if parsedURL.User != nil {
+			proxyAuth = &proxy.Auth{
+				User: parsedURL.User.Username(),
+				Password: func() string {
+					pass, _ := parsedURL.User.Password()
+					return pass
+				}(),
+			}
+		}
+
+		dialer, err := proxy.SOCKS5("tcp", parsedURL.Host, proxyAuth, proxy.Direct)
+		if err != nil {
+			log.Fatalf("Error creating proxy dialer: %v", err)
+		}
+		client.Transport = &http.Transport{
+			Dial: dialer.Dial,
+		}
+
+	case "http", "https":
+		client.Transport = &http.Transport{
+			Proxy: http.ProxyURL(parsedURL),
+		}
+
+	default:
+		log.Fatalf("Unsupported proxy scheme: %s", parsedURL.Scheme)
+	}
 }
