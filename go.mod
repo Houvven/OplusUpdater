@@ -1,4 +1,4 @@
-module updater
+module github.com/Houvven/OplusUpdater
 
 go 1.22
 

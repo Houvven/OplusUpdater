@@ -1,7 +1,7 @@
 package main
 
 import (
-	"updater/cmd"
+	"github.com/Houvven/OplusUpdater/cmd"
 )
 
 func main() {

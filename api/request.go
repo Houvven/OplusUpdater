@@ -10,7 +10,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"updater/config"
+
+	"github.com/Houvven/OplusUpdater/config"
 
 	"github.com/deatil/go-cryptobin/cryptobin/crypto"
 )

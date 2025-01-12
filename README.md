@@ -2,6 +2,12 @@
 
 Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version update.
 
+## Install
+
+```shell
+$ go install github.com/Houvven/OplusUpdater@latest
+```
+
 ## How to use?
 ```shell
 $ oplus-updater -h                                              

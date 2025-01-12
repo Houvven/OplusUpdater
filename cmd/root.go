@@ -6,9 +6,10 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-	"updater/api"
-	"updater/config"
-	"updater/util"
+
+	"github.com/Houvven/OplusUpdater/api"
+	"github.com/Houvven/OplusUpdater/config"
+	"github.com/Houvven/OplusUpdater/util"
 
 	"github.com/spf13/cobra"
 )
