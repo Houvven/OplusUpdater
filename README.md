@@ -5,7 +5,7 @@ Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version updat
 ## Install
 
 ```shell
-$ go install github.com/Houvven/OplusUpdater@latest
+$ go install github.com/Houvven/OplusUpdater/cmd/updater@latest
 ```
 
 ## How to use?
@@ -23,6 +23,7 @@ Flags:
   -m, --mode string              Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0 (default "0")
   -o, --ota-version string       OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000 or --ota-version=RMX3820_11.A
   -z, --zone string              Server zone: CN (default), EU or IN (optional), e.g., --zone=CN (default "CN")
+  -p, --proxy string             Proxy server address, e.g., --proxy=http://127.0.0.1:1080 (default "")
 ```
 
 ## Update request headers

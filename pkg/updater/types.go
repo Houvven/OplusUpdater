@@ -1,10 +1,12 @@
-package api
+package updater
 
 import (
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
+	"github.com/deatil/go-cryptobin/cryptobin/crypto"
+	"net/http"
 	"strings"
 )
 
@@ -26,6 +28,28 @@ type UpdateRequestHeaders struct {
 	OtaVersion     string                  `json:"otaVersion"`
 	DeviceId       string                  `json:"deviceId"`
 	ProtectedKey   map[string]CryptoConfig `json:"protectedKey"`
+}
+
+func (header *UpdateRequestHeaders) CreateRequestHeader(c Config) (http.Header, error) {
+	h := http.Header{
+		"androidVersion": {header.AndroidVersion},
+		"osVersion":      {header.ColorOSVersion},
+		"colorOSVersion": {header.ColorOSVersion},
+		"otaVersion":     {header.OtaVersion}, // ro.build.version.ota - my_manifest/build.prop
+		"deviceId":       {header.DeviceId},
+		"model":          {strings.Split(header.OtaVersion, "_")[0]},
+		"language":       {c.Language},
+		"nvCarrier":      {c.CarrierID},
+		"version":        {c.Version},
+		"Content-Type":   {"application/json; charset=utf-8"},
+	}
+
+	keyJson, err := json.Marshal(header.ProtectedKey)
+	if err != nil {
+		return nil, err
+	}
+	h.Set("protectedKey", string(keyJson))
+	return h, nil
 }
 
 func (header *UpdateRequestHeaders) SetDeviceId(id string) {
@@ -70,41 +94,33 @@ type RequestCipher struct {
 	H5LinkVersion int    `json:"h5LinkVersion"`
 }
 
-func DefaultUpdateRequestCipher(mode string) (RequestCipher, error) {
-	defaultRequestBodyJsonStr := fmt.Sprintf(`{ "mode": %s, "isRooted": "0" }`, mode)
-	var params RequestCipher
-	err := json.Unmarshal([]byte(defaultRequestBodyJsonStr), &params)
-	return params, err
+func NewUpdateRequestCipher(mode int, deviceId string) *RequestCipher {
+	return &RequestCipher{
+		Mode:     mode,
+		IsRooted: "0",
+		DeviceId: deviceId,
+	}
 }
 
-type UpdateResponseCipher struct {
-	Components []struct {
-		ComponentId      string `json:"componentId"`
-		ComponentName    string `json:"componentName"`
-		ComponentVersion string `json:"componentVersion"`
+func (cipher *RequestCipher) CreateRequestBody(key, iv []byte) ([]byte, error) {
+	marshal, err := json.Marshal(cipher)
+	if err != nil {
+		return nil, err
+	}
 
-		ComponentPackets struct {
-			Size      string `json:"size"`
-			ManualUrl string `json:"manualUrl"`
-			Id        string `json:"id"`
-			Url       string `json:"url"`
-			Md5       string `json:"md5"`
-		} `json:"componentPackets"`
-	} `json:"components"`
-
-	SecurityPatch   string `json:"securityPatch"`
-	RealVersionName string `json:"realVersionName"`
-
-	Description struct {
-		PanelUrl   string `json:"panelUrl"`
-		Url        string `json:"url"`
-		FirstTitle string `json:"firstTitle"`
-	} `json:"description"`
-
-	RealAndroidVersion  string `json:"realAndroidVersion"`
-	RealOsVersion       string `json:"realOsVersion"`
-	SecurityPatchVendor string `json:"securityPatchVendor"`
-	RealOtaVersion      string `json:"realOtaVersion"`
-	VersionTypeH5       string `json:"versionTypeH5"`
-	Status              string `json:"status"`
+	paramsJson, err := json.Marshal(
+		map[string]string{
+			"cipher": crypto.FromBytes(marshal).
+				Aes().CTR().NoPadding().
+				WithKey(key).
+				WithIv(iv).
+				Encrypt().
+				ToBase64String(),
+			"iv": base64.StdEncoding.EncodeToString(iv),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(map[string]string{"params": string(paramsJson)})
 }
