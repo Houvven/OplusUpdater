@@ -1,4 +1,4 @@
-package config
+package updater
 
 const publicKeyCN string = `
 -----BEGIN RSA PUBLIC KEY-----

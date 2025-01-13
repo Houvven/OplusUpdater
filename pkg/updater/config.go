@@ -1,4 +1,4 @@
-package config
+package updater
 
 type Config struct {
 	CarrierID        string // Found in `my_manifest/build.prop` file, under the `NV_ID` reference
