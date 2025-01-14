@@ -3,13 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Houvven/OplusUpdater/pkg/updater"
-	"github.com/spf13/cobra"
-	"github.com/tidwall/pretty"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/Houvven/OplusUpdater/pkg/updater"
+	"github.com/spf13/cobra"
+	"github.com/tidwall/pretty"
 )
 
 func getStringFlag(cmd *cobra.Command, flagName string) string {
@@ -53,11 +54,11 @@ var rootCmd = &cobra.Command{
 			Transport:  transport,
 		})
 		if err != nil {
-			return
+			fmt.Print(err)
 		}
 		cipherJson, err := json.Marshal(responseCipher)
 		if err != nil {
-			log.Fatalf("Error formatting cipher: %v", err)
+			fmt.Print(err)
 		}
 		fmt.Println(string(pretty.Color(pretty.Pretty(cipherJson), nil)))
 	},
