@@ -10,11 +10,11 @@ $ go install github.com/Houvven/OplusUpdater/cmd/updater@latest
 
 ## How to use?
 ```shell
-$ oplus-updater -h                                              
+$ updater -h                                              
 Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version update.
 
 Usage:
-  oplus-updater [flags]
+  updater [flags]
 
 Flags:
   -a, --android-version string   Android version (optional), e.g., --android-version=Android14 (default "nil")
