@@ -32,13 +32,13 @@ func GetConfig(country string) Config {
 		}
 	}
 
-	if country == "US" {
+	if country == "SG" {
 		return Config{
-			CarrierID:        "10100001",
-			Host:             "UNKNOWN",
-			Language:         "en-US",
-			PublicKey:        "UNKNOWN",
-			PublicKeyVersion: "UNKNOWN",
+			CarrierID:        "01011010",
+			Host:             "component-ota-sg.allawnos.com",
+			Language:         "en-SG",
+			PublicKey:        publicKeySG,
+			PublicKeyVersion: "1615895993238",
 			Version:          "2",
 		}
 	}
