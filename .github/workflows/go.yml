@@ -38,60 +38,52 @@ jobs:
         with:
           go-version: '1.22'
 
-      - name: Cache Go modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
       - name: Download dependencies
         run: go mod download
 
-      - name: Configure environment for Android
-        if: ${{ matrix.goos == 'android' }}
-        run: |
-          echo "CGO_ENABLED=1" >> $GITHUB_ENV
-        env:
-          ANDROID: ${{ matrix.goarch }}
-
       - name: Set up Android NDK (if Android build)
-        if: ${{ matrix.goos == 'android' }}
+        if: matrix.goos == 'android'
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r26d
           local-cache: true
 
-      - name: Set Compiler (if Android build)
-        if: ${{ matrix.goos == 'android' }}
+      - name: Configure compiler for Android
+        if: matrix.goos == 'android'
         run: |
+          echo "CGO_ENABLED=1" >> $GITHUB_ENV
           TOOLCHAIN=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin
-          if [ "${{ matrix.goarch }}" == "arm" ]; then
-            echo "CC=$TOOLCHAIN/armv7a-linux-androideabi21-clang" >> $GITHUB_ENV
-          elif [ "${{ matrix.goarch }}" == "arm64" ]; then
-            echo "CC=$TOOLCHAIN/aarch64-linux-android21-clang" >> $GITHUB_ENV
-          fi
+          case "${{ matrix.goarch }}" in
+            arm)
+              echo "CC=$TOOLCHAIN/armv7a-linux-androideabi21-clang" >> $GITHUB_ENV
+              ;;
+            arm64)
+              echo "CC=$TOOLCHAIN/aarch64-linux-android21-clang" >> $GITHUB_ENV
+              ;;
+          esac
 
       - name: Build binary
         run: |
-          mkdir -p ./bin/${{ matrix.goos }}-${{ matrix.goarch }}
-          go build -v -o ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater -ldflags "-s -w" .
+          OUTPUT_DIR=./bin/${{ matrix.goos }}-${{ matrix.goarch }}
+          mkdir -p $OUTPUT_DIR
+          OUTPUT_FILE="oplus-updater"
+          if [ "${{ matrix.goos }}" == "windows" ]; then
+            OUTPUT_FILE="oplus-updater.exe"
+          fi
+          go build -v -o $OUTPUT_DIR/$OUTPUT_FILE -ldflags "-s -w" ./cmd/updater
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
 
       - name: Compress binaries (if not macOS)
-        if: ${{ matrix.goos != 'darwin' }}
+        if: matrix.goos != 'darwin'
         uses: crazy-max/ghaction-upx@v3.0.0
         with:
-          files: ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater
+          files: ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater*
           args: --ultra-brute
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: oplus-updater-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater
+          path: ./bin/${{ matrix.goos }}-${{ matrix.goarch }}/oplus-updater*
