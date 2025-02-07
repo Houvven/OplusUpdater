@@ -52,7 +52,7 @@ func (header *UpdateRequestHeaders) CreateRequestHeader(c Config) (http.Header, 
 	return h, nil
 }
 
-func (header *UpdateRequestHeaders) SetDeviceId(id string) {
+func (header *UpdateRequestHeaders) SetHashedDeviceId(id string) {
 	hash := sha256.Sum256([]byte(id))
 	header.DeviceId = strings.ToUpper(hex.EncodeToString(hash[:]))
 }

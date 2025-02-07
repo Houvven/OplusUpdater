@@ -108,7 +108,7 @@ func QueryUpdater(attr Attribute) (*UpdateResponseCipher, error) {
 			},
 		},
 	}
-	headers.SetDeviceId(deviceId)
+	headers.SetHashedDeviceId(deviceId)
 	cipher := NewUpdateRequestCipher(attr.Mode, deviceId)
 
 	reqHeaders, err := headers.CreateRequestHeader(c)
