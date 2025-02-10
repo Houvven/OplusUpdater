@@ -79,6 +79,18 @@ type UpdateResponseCipher struct {
 // func QueryUpdater(otaVer, androidVer, colorOsVer, zone string, mode int, transport http.Transport) (*UpdateResponseCipher, error) {
 
 func QueryUpdater(attr Attribute) (*UpdateResponseCipher, error) {
+	rawBytes, err := QueryUpdaterRawBytes(attr)
+	if err != nil {
+		return nil, err
+	}
+	var cipher UpdateResponseCipher
+	if err := json.Unmarshal(rawBytes, &cipher); err != nil {
+		return nil, err
+	}
+	return &cipher, nil
+}
+
+func QueryUpdaterRawBytes(attr Attribute) ([]byte, error) {
 	attr.postProcessing()
 	deviceId := GetDefaultDeviceId()
 
@@ -143,7 +155,7 @@ func QueryUpdater(attr Attribute) (*UpdateResponseCipher, error) {
 	return decryptUpdateResponse(&result, key)
 }
 
-func decryptUpdateResponse(r *ResponseResult, key []byte) (*UpdateResponseCipher, error) {
+func decryptUpdateResponse(r *ResponseResult, key []byte) ([]byte, error) {
 	if r.ResponseCode != 200 {
 		return nil, fmt.Errorf("respnse code: %d, message: %s", r.ResponseCode, r.ErrMsg)
 	}
@@ -162,7 +174,5 @@ func decryptUpdateResponse(r *ResponseResult, key []byte) (*UpdateResponseCipher
 		WithKey(key).WithIv(iv).
 		Decrypt().ToBytes()
 
-	var cipher *UpdateResponseCipher
-	err = json.Unmarshal(cipherBytes, &cipher)
-	return cipher, err
+	return cipherBytes, nil
 }
