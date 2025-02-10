@@ -41,7 +41,7 @@ var rootCmd = &cobra.Command{
 		mode := getIntFlag(cmd, "mode")
 		proxy := getStringFlag(cmd, "proxy")
 
-		responseCipher, err := updater.QueryUpdater(updater.Attribute{
+		responseCipher, err := updater.QueryUpdater(&updater.Attribute{
 			OtaVer:     otaVer,
 			AndroidVer: androidVer,
 			ColorOSVer: colorOSVer,
