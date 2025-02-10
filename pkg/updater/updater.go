@@ -76,7 +76,7 @@ type UpdateResponseCipher struct {
 
 // func QueryUpdater(otaVer, androidVer, colorOsVer, zone string, mode int, transport http.Transport) (*UpdateResponseCipher, error) {
 
-func QueryUpdater(attr Attribute) (*UpdateResponseCipher, error) {
+func QueryUpdater(attr *Attribute) (*UpdateResponseCipher, error) {
 	rawBytes, err := QueryUpdaterRawBytes(attr)
 	if err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ func QueryUpdater(attr Attribute) (*UpdateResponseCipher, error) {
 	return &cipher, nil
 }
 
-func QueryUpdaterRawBytes(attr Attribute) ([]byte, error) {
+func QueryUpdaterRawBytes(attr *Attribute) ([]byte, error) {
 	attr.postProcessing()
 	deviceId := GetDefaultDeviceId()
 
