@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/deatil/go-cryptobin/cryptobin/crypto"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -18,7 +19,7 @@ type Attribute struct {
 	OtaVer     string
 	AndroidVer string
 	ColorOSVer string
-	Transport  *http.Transport
+	ProxyStr   string
 }
 
 func (attr *Attribute) postProcessing() {
@@ -38,9 +39,6 @@ func (attr *Attribute) postProcessing() {
 	}
 	if attr.Mode == 0 {
 		attr.Mode = 0
-	}
-	if attr.Transport == nil {
-		attr.Transport = &http.Transport{}
 	}
 }
 
@@ -138,8 +136,15 @@ func QueryUpdaterRawBytes(attr Attribute) ([]byte, error) {
 		Header: reqHeaders,
 		Body:   io.NopCloser(bytes.NewBuffer(reqBody)),
 	}
+
+	transport, err := ParseTransportFromProxyStr(attr.ProxyStr)
+	if err != nil {
+		transport = &http.Transport{}
+		log.Printf("Error in ParseTransportFromProxyStr: %v, not set.", err)
+	}
+
 	client := &http.Client{
-		Transport: attr.Transport,
+		Transport: transport,
 	}
 	resp, err := client.Do(req)
 	if err != nil {

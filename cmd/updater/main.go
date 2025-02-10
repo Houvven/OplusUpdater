@@ -41,17 +41,13 @@ var rootCmd = &cobra.Command{
 		mode := getIntFlag(cmd, "mode")
 		proxy := getStringFlag(cmd, "proxy")
 
-		transport, err := updater.ParseTransportFromProxyStr(proxy)
-		if err != nil {
-			log.Fatalf("Error in proxy: %v", err)
-		}
 		responseCipher, err := updater.QueryUpdater(updater.Attribute{
 			OtaVer:     otaVer,
 			AndroidVer: androidVer,
 			ColorOSVer: colorOSVer,
 			Zone:       zone,
 			Mode:       mode,
-			Transport:  transport,
+			ProxyStr:   proxy,
 		})
 		if err != nil {
 			fmt.Print(err)
