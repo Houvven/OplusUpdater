@@ -188,116 +188,127 @@ type: `CryptoConfig`
 ### Response Cipher
 ```json
 {
-  "parent": "ota",
-  "components": [
-    {
-      "componentId": "my_manifest_RMX3820_11.A.48_0480_202312191750.97.8acdd0e1",
-      "componentName": "my_manifest",
-      "componentVersion": "RMX3820_11.A.48_0480_202312191750.97.8acdd0e1",
-      "componentPackets": {
-        "size": "7567870840",
-        "vabInfo": {
-          "data": {
-            "otaStreamingProperty": "payload_metadata.bin:2061:289585,payload.bin:2061:7567865232,payload_properties.txt:7567867351:357,metadata:69:1004,metadata.pb:1141:853",
-            "vab_package_hash": "9dee63eec5dfbe0dc0912d1f9f4a49ac",
-            "extra_params": "metadata_hash:4c53b6277db3711a797c5f6c4ef24ee16b85783c81344e4532eb18a11d1e8a22",
-            "header": [
-              "FILE_HASH=aE0Ij/TOUrVd/zrsHd2Rirj+Cm7XAXqmUIdGXotS6LI=",
-              "FILE_SIZE=7567865232",
-              "METADATA_HASH=A/nUVqGS82xpbbtNa9ERoignix3BTN3NZFQ27CtFvcs=",
-              "METADATA_SIZE=289318",
-              "security_patch_vendor=2023-10-05",
-              "oplus_rom_version=V13.1.1",
-              "ota_target_version=RMX3820_11.A.48_0480_202312191750",
-              "oplus_separate_soft=22635",
-              "oplus_update_engine_verify_disable=0",
-              "security_patch=2023-10-05"
-            ]
-          }
+    "parent": "ota-template",
+    "components": [
+        {
+            "componentId": "my_manifest_10010111.202201100200494684051",
+            "componentName": "my_manifest",
+            "componentVersion": "10010111.202201100200494684051",
+            "componentPackets": {
+                "size": "1224301",
+                "manualUrl": "https://gauss-componentotacostmanual-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/040d0ba3022144f1b0849615f733d9ee.zip",
+                "id": "domestic_my_manifest_10010111.202201100200494684051_1_ae758a87d35bbc9bcf522c2737eda6f5",
+                "type": "1",
+                "url": "https://gauss-compotacostauto-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/040d0ba3022144f1b0849615f733d9ee.zip",
+                "md5": "ae758a87d35bbc9bcf522c2737eda6f5"
+            }
         },
-        "manualUrl": "https://gauss-componentotacostmanual-cn.allawnfs.com/remove-0e724850647faba7b84e96cc150c7f9c/component-ota/23/12/20/703c9a72c6684369ae2cbeea7dacf305.zip",
-        "id": "domestic_my_manifest_RMX3820_11.A.48_0480_202312191750.97.8acdd0e1_1_9dee63eec5dfbe0dc0912d1f9f4a49ac",
-        "type": "1",
-        "url": "https://gauss-compotacostauto-cn.allawnfs.com/remove-0e724850647faba7b84e96cc150c7f9c/component-ota/23/12/20/703c9a72c6684369ae2cbeea7dacf305.zip",
-        "md5": "9dee63eec5dfbe0dc0912d1f9f4a49ac"
-      }
-    }
-  ],
-  "securityPatch": "2023-10-05",
-  "realVersionName": "RMX3820_13.1.1.148(CN01)",
-  "otaVersion": "RMX3820_11.A.48_0480_202312191750",
-  "isNvDescription": true,
-  "description": {
-    "opex": {},
-    "share": ".",
-    "panelUrl": "https://gauss-compotacostauto-cn.allawnfs.com/remove-0e724850647faba7b84e96cc150c7f9c/component-ota/24/01/05/eb67803529e24f49a4ea4b4ce5e0e7f2.html",
-    "url": "https://h5fs.coloros.com/c1eeea21f88343e48612a8c5851cee23/static/index.html#/about",
-    "firstTitle": "本次更新优化系统流畅性、优化续航表现、修复其他已知问题"
-  },
-  "versionName": "RMX3820_13.1.1.148(CN01)",
-  "rid": "b542a90e-8213-4203-8f4f-63ea9a49d6f6",
-  "reminderValue": {
-    "download": {
-      "notice": [
-        1,
-        3,
-        5,
-        7,
-        7,
-        7
-      ],
-      "pop": [
-        1,
-        1,
-        1
-      ],
-      "version": "1703555533000"
+        {
+            "componentId": "my_stock_20615.6.25.202201100200494684051",
+            "componentName": "my_stock",
+            "componentVersion": "20615.6.25.202201100200494684051",
+            "componentPackets": {
+                "size": "977303936",
+                "manualUrl": "https://gauss-componentotacostmanual-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/f333ad742dfd4261a5ec82af1455c54a.zip",
+                "id": "domestic_my_stock_20615.6.25.202201100200494684051_1_70d4469db58ffe3ed3527b53e303a331",
+                "type": "1",
+                "url": "https://gauss-compotacostauto-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/f333ad742dfd4261a5ec82af1455c54a.zip",
+                "md5": "70d4469db58ffe3ed3527b53e303a331"
+            }
+        },
+        {
+            "componentId": "my_heytap_20615.7.9.202201100200494684049",
+            "componentName": "my_heytap",
+            "componentVersion": "20615.7.9.202201100200494684049",
+            "componentPackets": {
+                "size": "658009885",
+                "manualUrl": "https://gauss-componentotacostmanual-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/3f6e477367f44662aaac9c976e05e901.zip",
+                "id": "domestic_my_heytap_20615.7.9.202201100200494684049_1_288329f6325674da2abe12a3ab4c95f9",
+                "type": "1",
+                "url": "https://gauss-compotacostauto-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/3f6e477367f44662aaac9c976e05e901.zip",
+                "md5": "288329f6325674da2abe12a3ab4c95f9"
+            }
+        },
+        {
+            "componentId": "my_carrier_20615.7.9.202201101143504698468",
+            "componentName": "my_carrier",
+            "componentVersion": "20615.7.9.202201101143504698468",
+            "componentPackets": {
+                "size": "2929642",
+                "manualUrl": "https://gauss-componentotacostmanual-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/4b77731588704785a033e83127ae70a5.zip",
+                "id": "domestic_my_carrier_20615.7.9.202201101143504698468_1_98a09a0717c23c3accec1785dc5373e5",
+                "type": "1",
+                "url": "https://gauss-compotacostauto-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/4b77731588704785a033e83127ae70a5.zip",
+                "md5": "98a09a0717c23c3accec1785dc5373e5"
+            }
+        },
+        {
+            "componentId": "21609_system_vendor_20615.1.60.202201110003084707238",
+            "componentName": "system_vendor",
+            "componentVersion": "20615.1.60.202201110003084707238",
+            "componentPackets": {
+                "size": "2066055481",
+                "manualUrl": "https://gauss-componentotacostmanual-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/b3a202f878a5461ca81874aacb37f689.zip",
+                "id": "domestic_21609_system_vendor_20615.1.60.202201110003084707238_1_74ac01748d7fd3a653ef28717aaeacb5",
+                "type": "1",
+                "url": "https://gauss-compotacostauto-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/b3a202f878a5461ca81874aacb37f689.zip",
+                "md5": "74ac01748d7fd3a653ef28717aaeacb5"
+            }
+        },
+        {
+            "componentId": "my_region_20615.7.9.202201100200494684050",
+            "componentName": "my_region",
+            "componentVersion": "20615.7.9.202201100200494684050",
+            "componentPackets": {
+                "size": "189994921",
+                "manualUrl": "https://gauss-componentotacostmanual-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/69b80591935647f0a977421ef70c0a92.zip",
+                "id": "domestic_my_region_20615.7.9.202201100200494684050_1_00f06286c26e10e359f8b28a011c4773",
+                "type": "1",
+                "url": "https://gauss-compotacostauto-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/12/69b80591935647f0a977421ef70c0a92.zip",
+                "md5": "00f06286c26e10e359f8b28a011c4773"
+            }
+        }
+    ],
+    "securityPatch": "2022-01-05",
+    "otaVersion": "RMX3350_11.A.16_0160_202201110217",
+    "isNvDescription": false,
+    "description": {
+        "share": ".",
+        "panelUrl": "https://gauss-compotacostauto-cn.allawnfs.com/remove-3ec5e9087e94887cbaf403af49048652/component-ota/22/01/24/ef818de1ef714d8f81cbe6a5349e3082.html",
+        "url": "https://h5fs.coloros.com/c1eeea21f88343e48612a8c5851cee23/static/index.html#/about",
+        "firstTitle": "本次更新包含安全补丁更新，提升系统稳定性，优化功耗，修复一些已知问题"
     },
-    "upgrade": {
-      "notice": [
-        3,
-        5,
-        7,
-        7,
-        7
-      ],
-      "pop": [
-        3,
-        3,
-        3,
-        3,
-        3
-      ],
-      "version": "1703555533000"
-    }
-  },
-  "isRecruit": false,
-  "realAndroidVersion": "Android 13",
-  "opexInfo": [],
-  "isSecret": false,
-  "realOsVersion": "ColorOS 13.1.1",
-  "osVersion": "ColorOS 13.1",
-  "componentAssembleType": true,
-  "googlePatchInfo": "0",
-  "id": "65977eee124eec011ace498a",
-  "colorOSVersion": "ColorOS 13.1",
-  "paramFlag": 1,
-  "reminderType": 1,
-  "noticeType": 0,
-  "decentralize": {
-    "strategyVersion": "9",
-    "round": 28800,
-    "offset": 24286
-  },
-  "versionCode": 480,
-  "silenceUpdate": 0,
-  "securityPatchVendor": "2023-10-05",
-  "realOtaVersion": "RMX3820_11.A.48_0480_202312191750",
-  "androidVersion": "Android 13",
-  "nightUpdateLimit": "00-99",
-  "versionTypeH5": "正式版",
-  "aid": "RMX3820NV97_11.A",
-  "nvId16": "NV97",
-  "status": "published"
+    "versionName": "RMX3350_11_A.16",
+    "rid": "ea2fee92-2e1a-4ce5-946c-f9506eb35331",
+    "isRecruit": false,
+    "realAndroidVersion": "Android 11",
+    "isSecret": false,
+    "realOsVersion": "ColorOS 11.1",
+    "osVersion": "ColorOS 11.1",
+    "publishedTime": 1643244613390,
+    "componentAssembleType": true,
+    "descriptionType": 0,
+    "googlePatchInfo": "0",
+    "id": "61f1ec2d124eec00cf83d1b8",
+    "group": "RMX3350_11.A.16_0160_202201110217",
+    "colorOSVersion": "ColorOS 11.1",
+    "timestampH5": "2022.01.24",
+    "paramFlag": 1,
+    "reminderType": 0,
+    "noticeType": 0,
+    "decentralize": {
+        "strategyVersion": "9",
+        "round": 28800,
+        "offset": 9787
+    },
+    "versionCode": 160,
+    "silenceUpdate": 0,
+    "otaTemplateId": "61f0c52c66c96100cfa266f5",
+    "securityPatchVendor": "2022-01-05",
+    "androidVersion": "Android 11",
+    "versionTypeH5": "正式版",
+    "aid": "RMX3350NV97_11.A",
+    "nvId16": "NV97",
+    "status": "published"
 }
 ```
