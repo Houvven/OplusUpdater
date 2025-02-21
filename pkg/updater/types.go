@@ -27,9 +27,10 @@ type RequestBody struct {
 }
 
 type ResponseResult struct {
-	ResponseCode int    `json:"responseCode"`
-	ErrMsg       string `json:"errMsg"`
-	Body         any    `json:"body"`
+	ResponseCode       int    `json:"responseCode"`
+	ErrMsg             string `json:"errMsg"`
+	Body               any    `json:"body"`
+	DecryptedBodyBytes []byte
 }
 
 func (r *ResponseResult) DecryptBody(key []byte) error {
@@ -48,7 +49,6 @@ func (r *ResponseResult) DecryptBody(key []byte) error {
 		Decrypt().
 		ToBytes()
 
-	r.Body = cipherBytes
-
+	r.DecryptedBodyBytes = cipherBytes
 	return nil
 }
