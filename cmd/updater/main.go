@@ -34,6 +34,7 @@ var rootCmd = &cobra.Command{
 	Short: " Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version update.",
 	Run: func(cmd *cobra.Command, args []string) {
 		//Get the value of the flag
+		model := getStringFlag(cmd, "model")
 		otaVer := getStringFlag(cmd, "ota-version")
 		androidVer := getStringFlag(cmd, "android-version")
 		colorOSVer := getStringFlag(cmd, "colorOS-version")
@@ -42,12 +43,13 @@ var rootCmd = &cobra.Command{
 		proxy := getStringFlag(cmd, "proxy")
 
 		responseCipher, err := updater.QueryUpdater(&updater.Attribute{
-			OtaVer:     otaVer,
-			AndroidVer: androidVer,
-			ColorOSVer: colorOSVer,
-			Zone:       zone,
-			Mode:       mode,
-			ProxyStr:   proxy,
+			DeviceModel: model,
+			OtaVer:      otaVer,
+			AndroidVer:  androidVer,
+			ColorOSVer:  colorOSVer,
+			Zone:        zone,
+			Mode:        mode,
+			ProxyStr:    proxy,
 		})
 		if err != nil {
 			fmt.Print(err)
@@ -64,6 +66,7 @@ func init() {
 	otaVerBytes, _ := exec.Command("getprop", "ro.build.version.ota").Output()
 	otaVer := strings.TrimSpace(string(otaVerBytes))
 
+	rootCmd.Flags().String("model", "", "Device model, e.g., --model=RMX3820")
 	rootCmd.Flags().StringP("ota-version", "o", otaVer, "OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000")
 	rootCmd.Flags().StringP("android-version", "a", "nil", "Android version (optional), e.g., --android-version=Android14")
 	rootCmd.Flags().StringP("colorOS-version", "c", "nil", "ColorOS version (optional), e.g., --colorOS-version=ColorOS14.1.0")
