@@ -14,19 +14,21 @@ import (
 )
 
 type Attribute struct {
-	Zone       string
-	Mode       int
-	OtaVer     string
-	AndroidVer string
-	ColorOSVer string
-	ProxyStr   string
+	Zone        string
+	Mode        int
+	OtaVer      string
+	DeviceModel string
+	AndroidVer  string
+	ColorOSVer  string
+	ProxyStr    string
 }
 
 func (attr *Attribute) postProcessing() {
-	// maybe only support at realme.
-	// i dont known oppo and oplus 's version format.
 	if len(strings.Split(attr.OtaVer, "_")) < 3 || len(strings.Split(attr.OtaVer, ".")) < 3 {
 		attr.OtaVer += ".00_0000_000000000000"
+	}
+	if attr.DeviceModel == "" {
+		attr.DeviceModel = strings.Split(attr.OtaVer, "_")[0]
 	}
 	if attr.Zone == "" {
 		attr.Zone = "CN"
@@ -107,6 +109,7 @@ func QueryUpdaterRawBytes(attr *Attribute) ([]byte, error) {
 	}
 
 	headers := UpdateRequestHeaders{
+		DeviceModel:    attr.DeviceModel,
 		AndroidVersion: attr.AndroidVer, // or Android13
 		ColorOSVersion: attr.ColorOSVer, // or ColorOS13.1.0
 		OtaVersion:     attr.OtaVer,

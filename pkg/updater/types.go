@@ -23,6 +23,7 @@ type CryptoConfig struct {
 }
 
 type UpdateRequestHeaders struct {
+	DeviceModel    string                  `json:"deviceModel"`
 	AndroidVersion string                  `json:"androidVersion"`
 	ColorOSVersion string                  `json:"colorOSVersion"`
 	OtaVersion     string                  `json:"otaVersion"`
@@ -37,7 +38,7 @@ func (header *UpdateRequestHeaders) CreateRequestHeader(c Config) (http.Header, 
 		"colorOSVersion": {header.ColorOSVersion},
 		"otaVersion":     {header.OtaVersion}, // ro.build.version.ota - my_manifest/build.prop
 		"deviceId":       {header.DeviceId},
-		"model":          {strings.Split(header.OtaVersion, "_")[0]},
+		"model":          {header.DeviceModel},
 		"language":       {c.Language},
 		"nvCarrier":      {c.CarrierID},
 		"version":        {c.Version},
