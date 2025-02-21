@@ -56,7 +56,7 @@ func QueryUpdate(args *QueryUpdateArgs) ResponseResult {
 		//deviceId = strings.ToUpper(hex.EncodeToString(hash[:]))
 	}
 
-	requestUrl := url.URL{Host: config.Host, Scheme: "https", Path: "/update/v2"}
+	requestUrl := url.URL{Host: config.Host, Scheme: "https", Path: "/update/v5"}
 	requestHeaders := map[string]string{
 		"language":       config.Language,
 		"androidVersion": "unknown",
@@ -113,9 +113,7 @@ func QueryUpdate(args *QueryUpdateArgs) ResponseResult {
 	}
 	response, err := client.R().
 		SetHeaders(requestHeaders).
-		SetBody(map[string]string{
-			"params": requestBody,
-		}).
+		SetBody(map[string]string{"params": requestBody}).
 		Post(requestUrl.String())
 
 	if err != nil {
