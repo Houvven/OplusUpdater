@@ -14,6 +14,7 @@ type QueryUpdateArgs struct {
 	OtaVersion string
 	Region     string
 	Model      string
+	NvCarrier  string
 	Mode       int
 	IMEI       string
 	Proxy      string
@@ -35,6 +36,9 @@ func QueryUpdate(args *QueryUpdateArgs) ResponseResult {
 	args.post()
 
 	config := GetConfig(args.Region)
+	if args.NvCarrier == "" {
+		args.NvCarrier = config.CarrierID
+	}
 	iv, err := RandomIv()
 	if err != nil {
 		panic(err)
@@ -63,7 +67,7 @@ func QueryUpdate(args *QueryUpdateArgs) ResponseResult {
 		"colorOSVersion": "unknown",
 		"otaVersion":     args.OtaVersion,
 		"model":          args.Model,
-		"nvCarrier":      config.CarrierID,
+		"nvCarrier":      args.NvCarrier,
 		"version":        config.Version,
 		"deviceId":       deviceId,
 		"Content-Type":   "application/json; charset=utf-8",

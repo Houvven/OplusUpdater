@@ -35,14 +35,16 @@ var rootCmd = &cobra.Command{
 		//Get the value of the flag
 		model := getStringFlag(cmd, "model")
 		otaVer := getStringFlag(cmd, "ota-version")
+		carrier := getStringFlag(cmd, "carrier")
 		zone := getStringFlag(cmd, "zone")
 		mode := getIntFlag(cmd, "mode")
 		proxy := getStringFlag(cmd, "proxy")
 
 		result := updater.QueryUpdate(&updater.QueryUpdateArgs{
-			Model:      model,
 			OtaVersion: otaVer,
 			Region:     zone,
+			Model:      model,
+			NvCarrier:  carrier,
 			Mode:       mode,
 			Proxy:      proxy,
 		})
@@ -60,8 +62,10 @@ func init() {
 
 	rootCmd.Flags().StringP("ota-version", "o", otaVer, "OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000")
 	rootCmd.Flags().String("region", "CN", "Server zone: CN (default), EU or IN (optional), e.g., --zone=CN")
-	rootCmd.Flags().IntP("mode", "m", 0, "Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0")
 	rootCmd.Flags().String("model", "", "Device model, e.g., --model=RMX3820")
+	rootCmd.Flags().String("carrier", "", "Found in `my_manifest/build.prop` file, under the `NV_ID` reference")
+	rootCmd.Flags().IntP("mode", "m", 0, "Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0")
+	// todo: support imei
 	rootCmd.Flags().StringP("proxy", "p", "", "Proxy server, e.g., --proxy=type://@host:port or --proxy=type://user:password@host:port, support http and socks proxy")
 
 	if err := rootCmd.MarkFlagRequired("ota-version"); err != nil {
