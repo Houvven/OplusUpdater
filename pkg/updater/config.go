@@ -12,7 +12,7 @@ type Config struct {
 func GetConfig(country string) Config {
 	if country == RegionEu {
 		return Config{
-			CarrierID:        "10100111",
+			CarrierID:        "01000100",
 			Host:             "component-ota-eu.allawnos.com",
 			Language:         "en-GB",
 			PublicKey:        publicKeyEU,
