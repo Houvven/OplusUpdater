@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -36,29 +35,22 @@ var rootCmd = &cobra.Command{
 		//Get the value of the flag
 		model := getStringFlag(cmd, "model")
 		otaVer := getStringFlag(cmd, "ota-version")
-		androidVer := getStringFlag(cmd, "android-version")
-		colorOSVer := getStringFlag(cmd, "colorOS-version")
 		zone := getStringFlag(cmd, "zone")
 		mode := getIntFlag(cmd, "mode")
 		proxy := getStringFlag(cmd, "proxy")
 
-		responseCipher, err := updater.QueryUpdater(&updater.Attribute{
-			DeviceModel: model,
-			OtaVer:      otaVer,
-			AndroidVer:  androidVer,
-			ColorOSVer:  colorOSVer,
-			Zone:        zone,
-			Mode:        mode,
-			ProxyStr:    proxy,
+		result := updater.QueryUpdate(&updater.QueryUpdateArgs{
+			Model:      model,
+			OtaVersion: otaVer,
+			Region:     zone,
+			Mode:       mode,
+			Proxy:      proxy,
 		})
-		if err != nil {
-			fmt.Print(err)
+		fmt.Printf("Status: %d\n", result.ResponseCode)
+		if result.ResponseCode != 200 {
+			fmt.Printf("Error: %s\n", result.ErrMsg)
 		}
-		cipherJson, err := json.Marshal(responseCipher)
-		if err != nil {
-			fmt.Print(err)
-		}
-		fmt.Println(string(pretty.Color(pretty.Pretty(cipherJson), nil)))
+		fmt.Println(string(pretty.Color(pretty.Pretty(result.DecryptedBodyBytes), nil)))
 	},
 }
 
@@ -66,12 +58,10 @@ func init() {
 	otaVerBytes, _ := exec.Command("getprop", "ro.build.version.ota").Output()
 	otaVer := strings.TrimSpace(string(otaVerBytes))
 
-	rootCmd.Flags().String("model", "", "Device model, e.g., --model=RMX3820")
 	rootCmd.Flags().StringP("ota-version", "o", otaVer, "OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000")
-	rootCmd.Flags().StringP("android-version", "a", "nil", "Android version (optional), e.g., --android-version=Android14")
-	rootCmd.Flags().StringP("colorOS-version", "c", "nil", "ColorOS version (optional), e.g., --colorOS-version=ColorOS14.1.0")
-	rootCmd.Flags().StringP("zone", "z", "CN", "Server zone: CN (default), EU or IN (optional), e.g., --zone=CN")
+	rootCmd.Flags().String("region", "CN", "Server zone: CN (default), EU or IN (optional), e.g., --zone=CN")
 	rootCmd.Flags().IntP("mode", "m", 0, "Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0")
+	rootCmd.Flags().String("model", "", "Device model, e.g., --model=RMX3820")
 	rootCmd.Flags().StringP("proxy", "p", "", "Proxy server, e.g., --proxy=type://@host:port or --proxy=type://user:password@host:port, support http and socks proxy")
 
 	if err := rootCmd.MarkFlagRequired("ota-version"); err != nil {

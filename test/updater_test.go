@@ -9,7 +9,14 @@ import (
 
 func TestQueryUpdater(t *testing.T) {
 	result := updater.QueryUpdate(&updater.QueryUpdateArgs{
-		OtaVersion: "RMX3350_11.C",
+		OtaVersion: "CPH2653_11.A",
+		Region:     updater.RegionEu,
+		Model:      "CPH2653EEA",
 	})
+
+	fmt.Printf("Status: %d\n", result.ResponseCode)
+	if result.ResponseCode != 200 {
+		fmt.Printf("Error: %s\n", result.ErrMsg)
+	}
 	fmt.Println(string(pretty.Color(pretty.Pretty(result.DecryptedBodyBytes), nil)))
 }
