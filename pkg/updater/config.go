@@ -10,9 +10,9 @@ type Config struct {
 }
 
 func GetConfig(country string) Config {
-	if country == "EU" {
+	if country == RegionEu {
 		return Config{
-			CarrierID:        "10100111",
+			CarrierID:        "01000100",
 			Host:             "component-ota-eu.allawnos.com",
 			Language:         "en-GB",
 			PublicKey:        publicKeyEU,
@@ -21,7 +21,7 @@ func GetConfig(country string) Config {
 		}
 	}
 
-	if country == "IN" {
+	if country == RegionIn {
 		return Config{
 			CarrierID:        "00011011",
 			Host:             "component-ota-in.allawnos.com",
@@ -32,7 +32,7 @@ func GetConfig(country string) Config {
 		}
 	}
 
-	if country == "SG" {
+	if country == RegionSg {
 		return Config{
 			CarrierID:        "01011010",
 			Host:             "component-ota-sg.allawnos.com",

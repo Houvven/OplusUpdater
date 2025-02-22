@@ -1,186 +1,137 @@
 package updater
 
 import (
-	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"github.com/deatil/go-cryptobin/cryptobin/crypto"
-	"io"
-	"log"
-	"net/http"
+	"github.com/go-resty/resty/v2"
 	"net/url"
 	"strings"
+	"time"
 )
 
-type Attribute struct {
-	Zone        string
-	Mode        int
-	OtaVer      string
-	DeviceModel string
-	AndroidVer  string
-	ColorOSVer  string
-	ProxyStr    string
+type QueryUpdateArgs struct {
+	OtaVersion string
+	Region     string
+	Model      string
+	NvCarrier  string
+	Mode       int
+	IMEI       string
+	Proxy      string
 }
 
-func (attr *Attribute) postProcessing() {
-	if len(strings.Split(attr.OtaVer, "_")) < 3 || len(strings.Split(attr.OtaVer, ".")) < 3 {
-		attr.OtaVer += ".00_0000_000000000000"
+func (args *QueryUpdateArgs) post() {
+	if len(strings.Split(args.OtaVersion, "_")) < 3 || len(strings.Split(args.OtaVersion, ".")) < 3 {
+		args.OtaVersion += ".00_0000_000000000000"
 	}
-	if attr.DeviceModel == "" {
-		attr.DeviceModel = strings.Split(attr.OtaVer, "_")[0]
+	if r := strings.TrimSpace(args.Region); len(r) == 0 {
+		args.Region = RegionCn
 	}
-	if attr.Zone == "" {
-		attr.Zone = "CN"
-	}
-	if attr.AndroidVer == "" {
-		attr.AndroidVer = "nil"
-	}
-	if attr.ColorOSVer == "" {
-		attr.ColorOSVer = "nil"
-	}
-	if attr.Mode == 0 {
-		attr.Mode = 0
+	if m := strings.TrimSpace(args.Model); len(m) == 0 {
+		args.Model = strings.Split(args.OtaVersion, "_")[0]
 	}
 }
 
-type UpdateResponseCipher struct {
-	Components []struct {
-		ComponentId      string `json:"componentId"`
-		ComponentName    string `json:"componentName"`
-		ComponentVersion string `json:"componentVersion"`
+func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
+	args.post()
 
-		ComponentPackets struct {
-			Size      string `json:"size"`
-			ManualUrl string `json:"manualUrl"`
-			Id        string `json:"id"`
-			Url       string `json:"url"`
-			Md5       string `json:"md5"`
-		} `json:"componentPackets"`
-	} `json:"components"`
-
-	SecurityPatch   string `json:"securityPatch"`
-	RealVersionName string `json:"realVersionName"`
-
-	Description struct {
-		PanelUrl   string `json:"panelUrl"`
-		Url        string `json:"url"`
-		FirstTitle string `json:"firstTitle"`
-	} `json:"description"`
-
-	RealAndroidVersion  string `json:"realAndroidVersion"`
-	RealOsVersion       string `json:"realOsVersion"`
-	SecurityPatchVendor string `json:"securityPatchVendor"`
-	RealOtaVersion      string `json:"realOtaVersion"`
-	VersionTypeH5       string `json:"versionTypeH5"`
-	Status              string `json:"status"`
-}
-
-// func QueryUpdater(otaVer, androidVer, colorOsVer, zone string, mode int, transport http.Transport) (*UpdateResponseCipher, error) {
-
-func QueryUpdater(attr *Attribute) (*UpdateResponseCipher, error) {
-	rawBytes, err := QueryUpdaterRawBytes(attr)
-	if err != nil {
-		return nil, err
-	}
-	var cipher UpdateResponseCipher
-	if err := json.Unmarshal(rawBytes, &cipher); err != nil {
-		return nil, err
-	}
-	return &cipher, nil
-}
-
-func QueryUpdaterRawBytes(attr *Attribute) ([]byte, error) {
-	attr.postProcessing()
-	deviceId := GetDefaultDeviceId()
-
-	c := GetConfig(attr.Zone)
-	key, err := RandomKey()
-	if err != nil {
-		return nil, err
+	config := GetConfig(args.Region)
+	if args.NvCarrier == "" {
+		args.NvCarrier = config.CarrierID
 	}
 	iv, err := RandomIv()
 	if err != nil {
 		return nil, err
 	}
-	protectedKey, err := GenerateProtectedKey(key, []byte(c.PublicKey))
+	key, err := RandomKey()
+	if err != nil {
+		return nil, err
+	}
+	protectedKey, err := GenerateProtectedKey(key, []byte(config.PublicKey))
 	if err != nil {
 		return nil, err
 	}
 
-	headers := UpdateRequestHeaders{
-		DeviceModel:    attr.DeviceModel,
-		AndroidVersion: attr.AndroidVer, // or Android13
-		ColorOSVersion: attr.ColorOSVer, // or ColorOS13.1.0
-		OtaVersion:     attr.OtaVer,
-		ProtectedKey: map[string]CryptoConfig{
-			"SCENE_1": {
-				ProtectedKey:       protectedKey,
-				Version:            GenerateProtectedVersion(),
-				NegotiationVersion: c.PublicKeyVersion,
-			},
+	var deviceId string
+	if len(strings.TrimSpace(args.IMEI)) == 0 {
+		deviceId = GenerateDefaultDeviceId()
+	} else {
+		//hash := sha256.Sum256([]byte(deviceId))
+		//deviceId = strings.ToUpper(hex.EncodeToString(hash[:]))
+	}
+
+	requestUrl := url.URL{Host: config.Host, Scheme: "https", Path: "/update/v5"}
+	requestHeaders := map[string]string{
+		"language":       config.Language,
+		"androidVersion": "unknown",
+		"colorOSVersion": "unknown",
+		"otaVersion":     args.OtaVersion,
+		"model":          args.Model,
+		"nvCarrier":      args.NvCarrier,
+		"version":        config.Version,
+		"deviceId":       deviceId,
+		"Content-Type":   "application/json; charset=utf-8",
+	}
+	pkm := map[string]CryptoConfig{
+		"SCENE_1": {
+			ProtectedKey:       protectedKey,
+			Version:            GenerateProtectedVersion(),
+			NegotiationVersion: config.PublicKeyVersion,
 		},
 	}
-	headers.SetHashedDeviceId(deviceId)
-	cipher := NewUpdateRequestCipher(attr.Mode, deviceId)
+	if pk, err := json.Marshal(pkm); err == nil {
+		requestHeaders["protectedKey"] = string(pk)
+	} else {
+		return nil, err
+	}
 
-	reqHeaders, err := headers.CreateRequestHeader(c)
+	var requestBody string
+	if r, err := json.Marshal(map[string]any{
+		"mode":     args.Mode,
+		"time":     time.Now().UnixMilli(),
+		"isRooted": "0",
+		"isLocked": true,
+		"type":     "1",
+		"deviceId": deviceId,
+	}); err == nil {
+		bytes, err := json.Marshal(RequestBody{
+			Cipher: crypto.FromBytes(r).
+				Aes().CTR().NoPadding().
+				WithKey(key).WithIv(iv).
+				Encrypt().
+				ToBase64String(),
+			Iv: base64.StdEncoding.EncodeToString(iv),
+		})
+		if err != nil {
+			return nil, err
+		} else {
+			requestBody = string(bytes)
+		}
+	} else {
+		return nil, err
+	}
+
+	client := resty.New()
+	if p := strings.TrimSpace(args.Proxy); len(p) > 0 {
+		client.SetProxy(p)
+	}
+	response, err := client.R().
+		SetHeaders(requestHeaders).
+		SetBody(map[string]string{"params": requestBody}).
+		Post(requestUrl.String())
+
 	if err != nil {
 		return nil, err
 	}
-	reqBody, err := cipher.CreateRequestBody(key, iv)
-	if err != nil {
+
+	var responseResult *ResponseResult
+	if json.Unmarshal(response.Body(), &responseResult) != nil {
 		return nil, err
 	}
 
-	req := &http.Request{
-		Method: http.MethodPost,
-		URL:    &url.URL{Scheme: "https", Host: c.Host, Path: "/update/v3"},
-		Header: reqHeaders,
-		Body:   io.NopCloser(bytes.NewBuffer(reqBody)),
-	}
-
-	transport, err := ParseTransportFromProxyStr(attr.ProxyStr)
-	if err != nil {
-		transport = &http.Transport{}
-		log.Printf("Error in ParseTransportFromProxyStr: %v, not set.", err)
-	}
-
-	client := &http.Client{
-		Transport: transport,
-	}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer func(Body io.ReadCloser) {}(req.Body)
-
-	var result ResponseResult
-	if json.NewDecoder(resp.Body).Decode(&result) != nil {
+	if err := responseResult.DecryptBody(key); err != nil {
 		return nil, err
 	}
 
-	return decryptUpdateResponse(&result, key)
-}
-
-func decryptUpdateResponse(r *ResponseResult, key []byte) ([]byte, error) {
-	if r.ResponseCode != 200 {
-		return nil, fmt.Errorf("respnse code: %d, message: %s", r.ResponseCode, r.ErrMsg)
-	}
-
-	var m map[string]interface{}
-	if err := json.Unmarshal([]byte(r.Body.(string)), &m); err != nil {
-		return nil, err
-	}
-
-	iv, err := base64.StdEncoding.DecodeString(m["iv"].(string))
-	if err != nil {
-		return nil, err
-	}
-	cipherBytes := crypto.FromBase64String(m["cipher"].(string)).
-		Aes().CTR().NoPadding().
-		WithKey(key).WithIv(iv).
-		Decrypt().ToBytes()
-
-	return cipherBytes, nil
+	return responseResult, nil
 }
