@@ -35,6 +35,9 @@ type ResponseResult struct {
 
 func (r *ResponseResult) DecryptBody(key []byte) error {
 	var m map[string]interface{}
+	if r.Body == nil {
+		return nil
+	}
 	if err := json.Unmarshal([]byte(r.Body.(string)), &m); err != nil {
 		return err
 	}

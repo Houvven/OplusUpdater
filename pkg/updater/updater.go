@@ -32,7 +32,7 @@ func (args *QueryUpdateArgs) post() {
 	}
 }
 
-func QueryUpdate(args *QueryUpdateArgs) ResponseResult {
+func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 	args.post()
 
 	config := GetConfig(args.Region)
@@ -41,15 +41,15 @@ func QueryUpdate(args *QueryUpdateArgs) ResponseResult {
 	}
 	iv, err := RandomIv()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	key, err := RandomKey()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	protectedKey, err := GenerateProtectedKey(key, []byte(config.PublicKey))
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	var deviceId string
@@ -82,7 +82,7 @@ func QueryUpdate(args *QueryUpdateArgs) ResponseResult {
 	if pk, err := json.Marshal(pkm); err == nil {
 		requestHeaders["protectedKey"] = string(pk)
 	} else {
-		panic(err)
+		return nil, err
 	}
 
 	var requestBody string
@@ -103,12 +103,12 @@ func QueryUpdate(args *QueryUpdateArgs) ResponseResult {
 			Iv: base64.StdEncoding.EncodeToString(iv),
 		})
 		if err != nil {
-			panic(err)
+			return nil, err
 		} else {
 			requestBody = string(bytes)
 		}
 	} else {
-		panic(err)
+		return nil, err
 	}
 
 	client := resty.New()
@@ -121,17 +121,17 @@ func QueryUpdate(args *QueryUpdateArgs) ResponseResult {
 		Post(requestUrl.String())
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	var responseResult ResponseResult
+	var responseResult *ResponseResult
 	if json.Unmarshal(response.Body(), &responseResult) != nil {
-		panic(err)
+		return nil, err
 	}
 
 	if err := responseResult.DecryptBody(key); err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	return responseResult
+	return responseResult, nil
 }
