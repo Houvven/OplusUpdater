@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -9,7 +8,6 @@ import (
 
 	"github.com/Houvven/OplusUpdater/pkg/updater"
 	"github.com/spf13/cobra"
-	"github.com/tidwall/pretty"
 )
 
 func getStringFlag(cmd *cobra.Command, flagName string) string {
@@ -40,7 +38,7 @@ var rootCmd = &cobra.Command{
 		mode := getIntFlag(cmd, "mode")
 		proxy := getStringFlag(cmd, "proxy")
 
-		result := updater.QueryUpdate(&updater.QueryUpdateArgs{
+		result, err := updater.QueryUpdate(&updater.QueryUpdateArgs{
 			OtaVersion: otaVer,
 			Region:     region,
 			Model:      model,
@@ -48,11 +46,10 @@ var rootCmd = &cobra.Command{
 			Mode:       mode,
 			Proxy:      proxy,
 		})
-		fmt.Printf("Status: %d\n", result.ResponseCode)
-		if result.ResponseCode != 200 {
-			fmt.Printf("Error: %s\n", result.ErrMsg)
+		if err != nil {
+			log.Printf("Error in QueryUpdate: %v\n", err)
 		}
-		fmt.Println(string(pretty.Color(pretty.Pretty(result.DecryptedBodyBytes), nil)))
+		result.PrettyPrint()
 	},
 }
 
