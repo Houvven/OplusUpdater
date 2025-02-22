@@ -3,7 +3,9 @@ package updater
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"github.com/deatil/go-cryptobin/cryptobin/crypto"
+	"github.com/tidwall/pretty"
 )
 
 type Region = string
@@ -54,4 +56,19 @@ func (r *ResponseResult) DecryptBody(key []byte) error {
 
 	r.DecryptedBodyBytes = cipherBytes
 	return nil
+}
+
+func (r *ResponseResult) PrettyPrint() {
+	var body map[string]interface{}
+	_ = json.Unmarshal(r.DecryptedBodyBytes, &body)
+
+	m := map[string]interface{}{
+		"responseCode": r.ResponseCode,
+		"errMsg":       r.ErrMsg,
+		"body":         body,
+	}
+
+	if bytes, err := json.Marshal(m); err == nil {
+		fmt.Println(string(pretty.Color(pretty.Pretty(bytes), nil)))
+	}
 }
