@@ -27,7 +27,7 @@ func getIntFlag(cmd *cobra.Command, flagName string) int {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "oplus-updater",
+	Use:   "updater",
 	Short: " Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version update.",
 	Run: func(cmd *cobra.Command, args []string) {
 		//Get the value of the flag
@@ -63,7 +63,7 @@ func init() {
 	rootCmd.Flags().String("region", "CN", "Server zone: CN (default), EU or IN (optional), e.g., --region=CN")
 	rootCmd.Flags().String("model", "", "Device model, e.g., --model=RMX3820")
 	rootCmd.Flags().String("carrier", "", "Found in `my_manifest/build.prop` file, under the `NV_ID` reference, e.g., --carrier=01000100")
-	rootCmd.Flags().IntP("mode", "m", 0, "Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0")
+	rootCmd.Flags().Int("mode", 0, "Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0")
 	rootCmd.Flags().String("imei", "", "IMEI, e.g., --imei=86429XXXXXXXX98")
 	// todo: support imei
 	rootCmd.Flags().StringP("proxy", "p", "", "Proxy server, e.g., --proxy=type://@host:port or --proxy=type://user:password@host:port, support http and socks proxy")

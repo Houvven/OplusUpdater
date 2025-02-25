@@ -17,13 +17,14 @@ Usage:
   updater [flags]
 
 Flags:
-  -a, --android-version string   Android version (optional), e.g., --android-version=Android14 (default "nil")
-  -c, --colorOS-version string   ColorOS version (optional), e.g., --colorOS-version=ColorOS14.1.0 (default "nil")
-  -h, --help                     help for oplus-updater
-  -m, --mode string              Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0 (default "0")
-  -o, --ota-version string       OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000 or --ota-version=RMX3820_11.A
-  -z, --zone string              Server zone: CN (default), EU or IN (optional), e.g., --zone=CN (default "CN")
-  -p, --proxy string             Proxy server address, e.g., --proxy=http://127.0.0.1:1080 (default "")
+      --carrier my_manifest/build.prop   Found in my_manifest/build.prop file, under the `NV_ID` reference, e.g., --carrier=01000100
+  -h, --help                             help for oplus-updater
+      --imei string                      IMEI, e.g., --imei=86429XXXXXXXX98
+      --mode int                         Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0
+      --model string                     Device model, e.g., --model=RMX3820
+  -o, --ota-version string               OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000
+  -p, --proxy string                     Proxy server, e.g., --proxy=type://@host:port or --proxy=type://user:password@host:port, support http and socks proxy
+      --region string                    Server zone: CN (default), EU or IN (optional), e.g., --region=CN (default "CN")
 ```
 
 ## Update request headers

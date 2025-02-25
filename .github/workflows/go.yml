@@ -3,8 +3,12 @@ name: Go Build and Release
 on:
   push:
     branches: [ "master", "workflows" ]
+    paths-ignore:
+      - "**.md"
   pull_request:
     branches: [ "master", "workflows" ]
+    paths-ignore:
+      - "**.md"
 
 jobs:
   build:
