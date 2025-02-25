@@ -3,7 +3,9 @@ package updater
 import (
 	"crypto/aes"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"github.com/deatil/go-cryptobin/cryptobin/rsa"
 	"io"
 	"strconv"
@@ -37,4 +39,9 @@ func GenerateProtectedKey(key []byte, pubKey []byte) (string, error) {
 
 func GenerateDefaultDeviceId() string {
 	return strings.Repeat("0", 64)
+}
+
+func GenerateDeviceId(imei string) string {
+	hash := sha256.Sum256([]byte(imei))
+	return strings.ToUpper(hex.EncodeToString(hash[:]))
 }

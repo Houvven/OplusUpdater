@@ -56,8 +56,7 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 	if len(strings.TrimSpace(args.IMEI)) == 0 {
 		deviceId = GenerateDefaultDeviceId()
 	} else {
-		//hash := sha256.Sum256([]byte(deviceId))
-		//deviceId = strings.ToUpper(hex.EncodeToString(hash[:]))
+		deviceId = GenerateDeviceId(args.IMEI)
 	}
 
 	requestUrl := url.URL{Host: config.Host, Scheme: "https", Path: "/update/v5"}
