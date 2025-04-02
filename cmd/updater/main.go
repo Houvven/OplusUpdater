@@ -65,7 +65,6 @@ func init() {
 	rootCmd.Flags().String("carrier", "", "Found in `my_manifest/build.prop` file, under the `NV_ID` reference, e.g., --carrier=01000100")
 	rootCmd.Flags().Int("mode", 0, "Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0")
 	rootCmd.Flags().String("imei", "", "IMEI, e.g., --imei=86429XXXXXXXX98")
-	// todo: support imei
 	rootCmd.Flags().StringP("proxy", "p", "", "Proxy server, e.g., --proxy=type://@host:port or --proxy=type://user:password@host:port, support http and socks proxy")
 
 	if err := rootCmd.MarkFlagRequired("ota-version"); err != nil {
