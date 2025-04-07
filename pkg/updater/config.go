@@ -9,9 +9,9 @@ type Config struct {
 	Version          string // Found in `com.oplus.app-features.xml` file
 }
 
-func GetConfig(country string) Config {
+func GetConfig(country string) *Config {
 	if country == RegionEu {
-		return Config{
+		return &Config{
 			CarrierID:        "01000100",
 			Host:             "component-ota-eu.allawnos.com",
 			Language:         "en-GB",
@@ -22,7 +22,7 @@ func GetConfig(country string) Config {
 	}
 
 	if country == RegionIn {
-		return Config{
+		return &Config{
 			CarrierID:        "00011011",
 			Host:             "component-ota-in.allawnos.com",
 			Language:         "en-IN",
@@ -33,7 +33,7 @@ func GetConfig(country string) Config {
 	}
 
 	if country == RegionSg {
-		return Config{
+		return &Config{
 			CarrierID:        "01011010",
 			Host:             "component-ota-sg.allawnos.com",
 			Language:         "en-SG",
@@ -44,7 +44,7 @@ func GetConfig(country string) Config {
 	}
 
 	// Default to CN
-	return Config{
+	return &Config{
 		CarrierID:        "10010111",
 		Host:             "component-ota-cn.allawntech.com",
 		Language:         "zh-CN",
