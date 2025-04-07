@@ -18,6 +18,7 @@ const (
 	RegionSg = "SG"
 	RegionRu = "RU"
 	RegionTr = "TR"
+	RegionTh = "TH"
 )
 
 const commonHost = "component-ota-sg.allawnos.com"
@@ -46,7 +47,7 @@ func GetConfig(region string) *Config {
 		}
 	}
 
-	if region == RegionSg || region == RegionRu || region == RegionTr {
+	if region == RegionSg || region == RegionRu || region == RegionTr || region == RegionTh {
 		c := &Config{
 			Host:             commonHost,
 			PublicKey:        publicKeySG,
@@ -59,6 +60,9 @@ func GetConfig(region string) *Config {
 		} else if region == RegionTr {
 			c.CarrierID = "01010001"
 			c.Language = "tr-TR"
+		} else if region == RegionTh {
+			c.CarrierID = "00111001"
+			c.Language = "th-TH"
 		} else {
 			c.CarrierID = "01011010"
 			c.Language = "en-SG"
