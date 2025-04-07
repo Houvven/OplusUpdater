@@ -41,3 +41,38 @@ func TestQueryUpdate_RMX5010_CN(t *testing.T) {
 	}
 	result.PrettyPrint()
 }
+
+func TestQueryUpdate_RMX5011_RU(t *testing.T) {
+	result, err := updater.QueryUpdate(&updater.QueryUpdateArgs{
+		OtaVersion: "RMX5011_11.A",
+		Region:     updater.RegionRu,
+		Model:      "RMX5011RU",
+	})
+	if err != nil {
+		fmt.Println(err)
+	}
+	result.PrettyPrint()
+}
+
+func TestQueryUpdate_RMX5011_TR(t *testing.T) {
+	result, err := updater.QueryUpdate(&updater.QueryUpdateArgs{
+		OtaVersion: "RMX5011_11.A",
+		Region:     updater.RegionTr,
+		Model:      "RMX5011TR",
+	})
+	if err != nil {
+		fmt.Println(err)
+	}
+	result.PrettyPrint()
+}
+
+func TestQueryUpdate_PHP110_CN(t *testing.T) {
+	result, err := updater.QueryUpdate(&updater.QueryUpdateArgs{
+		OtaVersion: "PHP110_11.F",
+		Region:     updater.RegionCn,
+	})
+	if err != nil {
+		fmt.Println(err)
+	}
+	result.PrettyPrint()
+}
