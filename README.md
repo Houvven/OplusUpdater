@@ -7,6 +7,7 @@ Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version updat
 ```shell
 $ go install github.com/Houvven/OplusUpdater/cmd/updater@latest
 ```
+For android u can use [Houvven/OplusUpdater-android](https://github.com/Houvven/OplusUpdater-android)
 
 ## How to use?
 ```shell
