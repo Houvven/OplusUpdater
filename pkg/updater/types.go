@@ -8,15 +8,6 @@ import (
 	"github.com/tidwall/pretty"
 )
 
-type Region = string
-
-const (
-	RegionCn = "CN"
-	RegionEu = "EU"
-	RegionIn = "IN"
-	RegionSg = "SG"
-)
-
 type CryptoConfig struct {
 	ProtectedKey       string `json:"protectedKey"`
 	Version            string `json:"version"`

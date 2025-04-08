@@ -9,8 +9,23 @@ type Config struct {
 	Version          string // Found in `com.oplus.app-features.xml` file
 }
 
-func GetConfig(country string) *Config {
-	if country == RegionEu {
+type Region = string
+
+const (
+	RegionCn = "CN"
+	RegionEu = "EU"
+	RegionIn = "IN"
+	RegionSg = "SG"
+	RegionRu = "RU"
+	RegionTr = "TR"
+	RegionTh = "TH"
+)
+
+const commonHost = "component-ota-sg.allawnos.com"
+
+func GetConfig(region string) *Config {
+
+	if region == RegionEu {
 		return &Config{
 			CarrierID:        "01000100",
 			Host:             "component-ota-eu.allawnos.com",
@@ -21,7 +36,7 @@ func GetConfig(country string) *Config {
 		}
 	}
 
-	if country == RegionIn {
+	if region == RegionIn {
 		return &Config{
 			CarrierID:        "00011011",
 			Host:             "component-ota-in.allawnos.com",
@@ -32,15 +47,27 @@ func GetConfig(country string) *Config {
 		}
 	}
 
-	if country == RegionSg {
-		return &Config{
-			CarrierID:        "01011010",
-			Host:             "component-ota-sg.allawnos.com",
-			Language:         "en-SG",
+	if region == RegionSg || region == RegionRu || region == RegionTr || region == RegionTh {
+		c := &Config{
+			Host:             commonHost,
 			PublicKey:        publicKeySG,
 			PublicKeyVersion: "1615895993238",
 			Version:          "2",
 		}
+		if region == RegionRu {
+			c.CarrierID = "00110111"
+			c.Language = "ru-RU"
+		} else if region == RegionTr {
+			c.CarrierID = "01010001"
+			c.Language = "tr-TR"
+		} else if region == RegionTh {
+			c.CarrierID = "00111001"
+			c.Language = "th-TH"
+		} else {
+			c.CarrierID = "01011010"
+			c.Language = "en-SG"
+		}
+		return c
 	}
 
 	// Default to CN
