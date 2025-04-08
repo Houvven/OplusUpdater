@@ -66,6 +66,7 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 		"colorOSVersion": "unknown",
 		"otaVersion":     args.OtaVersion,
 		"model":          args.Model,
+		"mode":           "manual",
 		"nvCarrier":      args.NvCarrier,
 		"version":        config.Version,
 		"deviceId":       deviceId,
