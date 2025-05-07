@@ -22,7 +22,7 @@ type QueryUpdateArgs struct {
 
 func (args *QueryUpdateArgs) post() {
 	if len(strings.Split(args.OtaVersion, "_")) < 3 || len(strings.Split(args.OtaVersion, ".")) < 3 {
-		args.OtaVersion += ".00_0000_000000000000"
+		args.OtaVersion += ".01_0001_197001010000"
 	}
 	if r := strings.TrimSpace(args.Region); len(r) == 0 {
 		args.Region = RegionCn
