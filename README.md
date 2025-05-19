@@ -11,21 +11,8 @@ For android u can use [Houvven/OplusUpdater-android](https://github.com/Houvven/
 
 ## How to use?
 ```shell
+# see help
 $ updater -h                                              
-Use Oplus official api to query OPlus,OPPO and Realme Mobile 's OS version update.
-
-Usage:
-  updater [flags]
-
-Flags:
-      --carrier my_manifest/build.prop   Found in my_manifest/build.prop file, under the `NV_ID` reference, e.g., --carrier=01000100
-  -h, --help                             help for oplus-updater
-      --imei string                      IMEI, e.g., --imei=86429XXXXXXXX98
-      --mode int                         Mode: 0 (stable, default) or 1 (testing), e.g., --mode=0
-      --model string                     Device model, e.g., --model=RMX3820
-  -o, --ota-version string               OTA version (required), e.g., --ota-version=RMX3820_11.A.00_0000_000000000000
-  -p, --proxy string                     Proxy server, e.g., --proxy=type://@host:port or --proxy=type://user:password@host:port, support http and socks proxy
-      --region string                    Server zone: CN (default), EU or IN (optional), e.g., --region=CN (default "CN")
 ```
 
 ## Update request headers
