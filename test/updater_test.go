@@ -2,8 +2,9 @@ package test
 
 import (
 	"fmt"
-	"github.com/Houvven/OplusUpdater/pkg/updater"
 	"testing"
+
+	"github.com/Houvven/OplusUpdater/pkg/updater"
 )
 
 func ProcessResult(result *updater.ResponseResult, err error) {
@@ -66,5 +67,13 @@ func TestQueryUpdate_PHP110_CN(t *testing.T) {
 	ProcessResult(updater.QueryUpdate(&updater.QueryUpdateArgs{
 		OtaVersion: "PHP110_11.F",
 		Region:     updater.RegionCn,
+	}))
+}
+
+func TestQueryUpdate_RMX5011_GL(t *testing.T) {
+	ProcessResult(updater.QueryUpdate(&updater.QueryUpdateArgs{
+		OtaVersion: "CPH2653_11.A",
+		Region:     updater.RegionGl,
+		Model:      "CPH2653",
 	}))
 }
