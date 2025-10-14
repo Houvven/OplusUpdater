@@ -18,6 +18,7 @@ type QueryUpdateArgs struct {
 	Mode       int
 	IMEI       string
 	Proxy      string
+	Gray       int
 }
 
 func (args *QueryUpdateArgs) post() {
@@ -35,7 +36,7 @@ func (args *QueryUpdateArgs) post() {
 func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 	args.post()
 
-	config := GetConfig(args.Region)
+	config := GetConfig(args.Region, args.Gray)
 	if args.NvCarrier == "" {
 		args.NvCarrier = config.CarrierID
 	}

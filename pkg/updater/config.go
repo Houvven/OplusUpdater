@@ -24,7 +24,7 @@ const (
 
 const commonHost = "component-ota-sg.allawnos.com"
 
-func GetConfig(region string) *Config {
+func GetConfig(region string, gray int) *Config {
 	const defaultVersion = "2"
 
 	baseConfigSG := &Config{
@@ -73,9 +73,14 @@ func GetConfig(region string) *Config {
 		}
 	}
 
+	host := "component-ota-cn.allawntech.com"
+	if gray == 1 {
+		host = "component-ota-gray.coloros.com"
+	}
+
 	return &Config{
 		CarrierID:        "10010111",
-		Host:             "component-ota-cn.allawntech.com",
+		Host:             host,
 		Language:         "zh-CN",
 		PublicKey:        publicKeyCN,
 		PublicKeyVersion: "1615879139745",
