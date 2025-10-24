@@ -27,7 +27,7 @@ $ updater -h
 | infVersion     | magic value: 1                                      | 1                                 | ⭕        |
 | otaVersion     | _ro.build.version.ota_                              | RMX3350_11.F.25_3250_202403011232 | ✅        |
 | model          | `Build.MODEL `                                      | rmx3350                           | ✅        |
-| mode           | `client_auto` or `server_auto` or `manual` or `???` | manual                            | ⭕        |
+| mode           | `client_auto` or `server_auto` or `manual` or `taste` or `???` | manual                            | ⭕        |
 | nvCarrier      | _ro.build.oplus_nv_id_                              |                                   | ✅        |
 | pipelineKey    | _ro.oplus.pipeline_key_                             |                                   | ⭕        |
 | companyId      | _ro.oplus.company_id_                               | ~~is empty?~~                     | ⭕        |
