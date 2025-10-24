@@ -73,7 +73,7 @@ func init() {
 	rootCmd.Flags().StringP("imei", "i", "", "IMEI, e.g., 864290000000000")
 	rootCmd.Flags().StringP("proxy", "p", "", "Proxy server, e.g., type://user:password@host:port")
 	rootCmd.Flags().Int("gray", 0, "Gray update server: 0 (default) or 1 (use gray server for CN region)")
-	rootCmd.Flags().String("reqmode", "manual", "Request Mode: manual (default), server_auto, client_auto or taste")
+	rootCmd.Flags().String("reqmode", "manual", "Request Mode: manual (default), server_auto, client_auto or taste. Do not use taste mode together with gray update mode (--gray=1).")
 }
 
 func main() {
