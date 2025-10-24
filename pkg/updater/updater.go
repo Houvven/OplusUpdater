@@ -19,6 +19,7 @@ type QueryUpdateArgs struct {
 	IMEI       string
 	Proxy      string
 	Gray       int
+	ReqMode    string
 }
 
 func (args *QueryUpdateArgs) post() {
@@ -60,6 +61,11 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 		deviceId = GenerateDeviceId(args.IMEI)
 	}
 
+	reqMode := "manual"
+	if args.ReqMode != "" {
+		reqMode = args.ReqMode
+	}
+
 	requestUrl := url.URL{Host: config.Host, Scheme: "https", Path: "/update/v5"}
 	requestHeaders := map[string]string{
 		"language":       config.Language,
@@ -67,7 +73,7 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 		"colorOSVersion": "unknown",
 		"otaVersion":     args.OtaVersion,
 		"model":          args.Model,
-		"mode":           "manual",
+		"mode":           reqMode,
 		"nvCarrier":      args.NvCarrier,
 		"version":        config.Version,
 		"deviceId":       deviceId,

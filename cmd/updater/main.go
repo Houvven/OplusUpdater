@@ -27,6 +27,7 @@ var example = `
   updater RMX3820_13.1.0.130_0130_202404010000 --model=RMX3820 --region=IN --mode=1
   updater A127_13.0_0001 --model=A127 --carrier=00000000 --proxy=http://localhost:7890
   updater OPD2413_11.A --model=OPD2413 --region=CN --gary=1
+  updater PJX110_11.C --region=CN --reqmode=taste
 `
 
 var rootCmd = &cobra.Command{
@@ -44,6 +45,7 @@ var rootCmd = &cobra.Command{
 		imei := getStringFlag(cmd, "imei")
 		proxy := getStringFlag(cmd, "proxy")
 		gray := getIntFlag(cmd, "gary")
+		reqmode := getStringFlag(cmd, "reqmode")
 
 		result, err := updater.QueryUpdate(&updater.QueryUpdateArgs{
 			OtaVersion: otaVer,
@@ -54,6 +56,7 @@ var rootCmd = &cobra.Command{
 			IMEI:       imei,
 			Proxy:      proxy,
 			Gray:       gray,
+			ReqMode:    reqmode,
 		})
 		if err != nil {
 			log.Fatalf("Error in QueryUpdate: %v", err)
@@ -70,6 +73,7 @@ func init() {
 	rootCmd.Flags().StringP("imei", "i", "", "IMEI, e.g., 864290000000000")
 	rootCmd.Flags().StringP("proxy", "p", "", "Proxy server, e.g., type://user:password@host:port")
 	rootCmd.Flags().Int("gary", 0, "Gray update server: 0 (default) or 1 (use gray server for CN region)")
+	rootCmd.Flags().String("reqmode", "manual", "Request Mode: manual (default), server_auto, client_auto or taste")
 }
 
 func main() {
