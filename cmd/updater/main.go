@@ -42,7 +42,6 @@ var rootCmd = &cobra.Command{
 		carrier := getStringFlag(cmd, "carrier")
 		region := getStringFlag(cmd, "region")
 		mode := getIntFlag(cmd, "mode")
-		imei := getStringFlag(cmd, "imei")
 		guid := getStringFlag(cmd, "guid")
 		proxy := getStringFlag(cmd, "proxy")
 		gray := getIntFlag(cmd, "gray")
@@ -54,7 +53,6 @@ var rootCmd = &cobra.Command{
 			Model:      model,
 			NvCarrier:  carrier,
 			Mode:       mode,
-			IMEI:       imei,
 			GUID:       guid,
 			Proxy:      proxy,
 			Gray:       gray,
@@ -72,7 +70,6 @@ func init() {
 	rootCmd.Flags().StringP("region", "r", "CN", "Server region: CN (default), EU or IN")
 	rootCmd.Flags().StringP("carrier", "c", "", "Carrier ID found in `my_manifest/build.prop` file under the `NV_ID` reference, e.g., 01000100")
 	rootCmd.Flags().Int("mode", 0, "Mode: 0 (stable, default) or 1 (testing)")
-	rootCmd.Flags().StringP("imei", "i", "", "IMEI, e.g., 864290000000000")
 	rootCmd.Flags().StringP("guid", "g", "", "GUID, e.g., 1234567890(64 bit)")
 	rootCmd.Flags().StringP("proxy", "p", "", "Proxy server, e.g., type://user:password@host:port")
 	rootCmd.Flags().Int("gray", 0, "Gray update server: 0 (default) or 1 (use gray server for CN region)")

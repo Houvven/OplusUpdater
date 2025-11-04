@@ -16,7 +16,6 @@ type QueryUpdateArgs struct {
 	Model      string
 	NvCarrier  string
 	Mode       int
-	IMEI       string
 	GUID       string
 	Proxy      string
 	Gray       int
