@@ -17,6 +17,7 @@ type QueryUpdateArgs struct {
 	NvCarrier  string
 	Mode       int
 	IMEI       string
+	GUID       string
 	Proxy      string
 	Gray       int
 	ReqMode    string
@@ -55,10 +56,12 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 	}
 
 	var deviceId string
-	if len(strings.TrimSpace(args.IMEI)) == 0 {
-		deviceId = GenerateDefaultDeviceId()
+	var GUID string
+	deviceId = GenerateDefaultDeviceId()
+	if len(strings.TrimSpace(args.GUID)) == 0 {
+	    GUID = GenerateDefaultDeviceId()
 	} else {
-		deviceId = GenerateDeviceId(args.IMEI)
+		GUID = args.GUID
 	}
 
 	reqMode := "manual"
@@ -71,10 +74,12 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 		"language":       config.Language,
 		"androidVersion": "unknown",
 		"colorOSVersion": "unknown",
+		"romVersion":     "unknown",
 		"otaVersion":     args.OtaVersion,
 		"model":          args.Model,
 		"mode":           reqMode,
 		"nvCarrier":      args.NvCarrier,
+		"infVersion":     "1",
 		"version":        config.Version,
 		"deviceId":       deviceId,
 		"Content-Type":   "application/json; charset=utf-8",
@@ -98,8 +103,8 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 		"time":     time.Now().UnixMilli(),
 		"isRooted": "0",
 		"isLocked": true,
-		"type":     "1",
-		"deviceId": deviceId,
+		"type":     "0",
+		"deviceId": GUID,
 	}); err == nil {
 		bytes, err := json.Marshal(RequestBody{
 			Cipher: crypto.FromBytes(r).
