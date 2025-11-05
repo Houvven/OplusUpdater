@@ -60,7 +60,7 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 	if len(strings.TrimSpace(args.GUID)) == 0 {
 	    GUID = GenerateDefaultDeviceId()
 	} else {
-		GUID = args.GUID
+		GUID = strings.ToLower(args.GUID)
 	}
 
 	reqMode := "manual"
