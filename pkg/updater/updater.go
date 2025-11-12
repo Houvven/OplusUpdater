@@ -15,7 +15,6 @@ type QueryUpdateArgs struct {
 	Region     string
 	Model      string
 	NvCarrier  string
-	Mode       int
 	GUID       string
 	Proxy      string
 	Gray       int
@@ -98,7 +97,7 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 
 	var requestBody string
 	if r, err := json.Marshal(map[string]any{
-		"mode":     args.Mode,
+		"mode":     "0",
 		"time":     time.Now().UnixMilli(),
 		"isRooted": "0",
 		"isLocked": true,
